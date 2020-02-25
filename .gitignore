@@ -1,0 +1,5 @@
+instance-config/deep-stock-service-key.json
+instance-config/terraform.tfstate
+instance-config/terraform.tfstate.backup
+instance-config/.terraform
+instance-config/terraform.tfvars
