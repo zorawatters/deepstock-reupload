@@ -8,7 +8,7 @@ A Terraform config file is located in the instance-config folder. In order for i
 cred_key_path="deep-stock-service-key.json"
 name="YOUR_NAME-instance"
 ```
-__If you name your key something other than what is listed below, make sure to add it to the .gitignore file.__
+__If you name your key something other than what is listed above, make sure to add it to the .gitignore file.__
 
 Then make sure terraform is properly setup on your computer, then run `terraform init` while inside the instance-config directory. After that run `terraform apply`, and your instance will be created in the DeepStock GCP project.  
 After confirming the creation, wait 3-4 minutes, then ssh into the instance through the GCP console.  
