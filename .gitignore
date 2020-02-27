@@ -16,10 +16,10 @@ selenium-debug.log
 *.ntvs*
 *.njsproj
 *.sln
-=======
 instance-config/deep-stock-service-key.json
 instance-config/terraform.tfstate
 instance-config/terraform.tfstate.backup
 instance-config/.terraform
 instance-config/terraform.tfvars
->>>>>>> 984024462d5929d314b329486f1cb9e65338505e
+instance-config/deep-stock-git-key
+instance-config/deep-stock-git-key.pub
