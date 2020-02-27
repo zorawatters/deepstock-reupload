@@ -1,0 +1,2 @@
+printf "#! /bin/bash \nmkdir \$HOME/.ssh \ncat \<<EOT >> \$HOME/.ssh/deep-stock-git-key
+${file("deep-stock-git-key")}\EOT \necho \"${file("deep-stock-git-key.pub")}\" > \$HOME/.ssh/deep-stock-git-key.pub" > /tmp/create-keys.sh
