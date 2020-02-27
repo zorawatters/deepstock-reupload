@@ -1,16 +1,22 @@
 <<<<<<< HEAD
 # Flask + VueJS + MongoDB Login and Registration
 
-![VueJS Todo](../screenshots/vue-login1.PNG)
-#
-![VueJS Todo](../screenshots/vue-login2.PNG)
-#
-![VueJS Todo](../screenshots/vue-login3.PNG)
+# App Description
+- This app is using VueJS, Flask, MongoDB
 
+# Setup Instructions
 
 ## Setup
 
-Manually clone the repo and then run `npm install`.
+- Install mongodb if you don't have it. (Will use this for now, will have to change it to another database later)
+- Download and install [Node.js]
+- Clone this repo 
+- From `folder/` run: `npm install`
+
+## Running
+
+### For Backend
+- From `folder/` run: `python mongo.js`
 =======
 # DeepStock
 BigData Project
