@@ -17,6 +17,11 @@
 
 ### For Backend
 - From `folder/` run: `python mongo.js`
+
+### For Frontend
+- From `folder/` run: `npm start`
+### For Backend
+- From `folder/` run: `python mongo.js`
 =======
 # DeepStock
 BigData Project
