@@ -16,7 +16,7 @@ provider "google" {
 resource "google_compute_instance" "vm_instance" {
   name         = var.name
   machine_type = "f1-micro"
-  tags         = ["http"]
+  tags         = ["http", "http-server"]
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-9"
@@ -26,12 +26,55 @@ resource "google_compute_instance" "vm_instance" {
   metadata_startup_script=<<-EOT
   sudo apt-get install -yq git-all
   sudo apt-get -y update  
-  sudo apt-get install -yq build-essential python-pip rsync
+  sudo apt-get install -yq build-essential python3-pip rsync
+  sudo apt-get install -yq nginx
+  sudo apt-get install -yq python3-venv
   printf "#! /bin/bash \nsudo curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.9/install.sh | bash \nexport NVM_DIR=\"\$HOME/.nvm\" \n[ -s \"\$NVM_DIR/nvm.sh\" ] && \. \"\$NVM_DIR/nvm.sh\""> /tmp/setup-nvm.sh
   printf "#! /bin/bash \nmkdir \$HOME/.ssh \ncat > \$HOME/.ssh/deep-stock-git-key <<-EOT \n${file("deep-stock-git-key")}" > /tmp/create-private-key.sh
   printf "#! /bin/bash \necho \"${file("deep-stock-git-key.pub")}\" > \$HOME/.ssh/deep-stock-git-key.pub" > /tmp/create-public-key.sh
-  printf "#! /bin/bash \nif [ -a /var/tmp/first-login ]; then \necho \"Returning Customer\"\nelse \necho \"First Time\" \n\. /tmp/setup-nvm.sh \n\. /tmp/create-private-key.sh \n\. /tmp/create-public-key.sh \nchmod 400 \$HOME/.ssh/deep-stock-git-key \neval \"\$(ssh-agent -s)\" \nssh-add \$HOME/.ssh/deep-stock-git-key \ntouch /var/tmp/first-login \nnvm install stable \necho \"Node version: \" \nnode -v \nfi" > /etc/profile.d/first-login-prompt.sh
+  printf "#! /bin/bash \nsudo service apache2 stop \nif [ -a /var/tmp/first-login ]; then \necho \"Returning Customer\"\nelse \necho \"First Time\" \n\. /tmp/setup-nvm.sh \n\. /tmp/create-private-key.sh \n\. /tmp/create-public-key.sh \nchmod 400 \$HOME/.ssh/deep-stock-git-key \neval \"\$(ssh-agent -s)\" \nssh-add \$HOME/.ssh/deep-stock-git-key \ntouch /var/tmp/first-login \nnvm install stable \necho \"Node version: \" \nnode -v \nssh-keyscan github.com >> \$HOME/.ssh/known_hosts \ngit clone git@github.com:CUBigDataClass/DeepStock.git \nfi" > /etc/profile.d/first-login-prompt.sh
   EOT
+
+# pretty above code
+# printf "
+#   #! /bin/bash 
+#   sudo curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.9/install.sh | bash 
+#   export NVM_DIR=\"\$HOME/.nvm\" 
+#   [ -s \"\$NVM_DIR/nvm.sh\" ] && \. \"\$NVM_DIR/nvm.sh\""
+# > /tmp/setup-nvm.sh
+  
+# printf "
+#   #! /bin/bash 
+#   mkdir \$HOME/.ssh 
+#   cat > \$HOME/.ssh/deep-stock-git-key <<-EOT \n${file("deep-stock-git-key")}" 
+# > /tmp/create-private-key.sh
+  
+# printf "
+#   #! /bin/bash 
+#   echo \"${file("deep-stock-git-key.pub")}\" > \$HOME/.ssh/deep-stock-git-key.pub" 
+# > /tmp/create-public-key.sh
+  
+# printf "
+#   #! /bin/bash 
+#   sudo service apache2 stop
+#   if [ -a /var/tmp/first-login ]; then 
+#     echo \"Returning Customer\"
+#   else 
+#     echo \"First Time\" 
+#     \. /tmp/setup-nvm.sh 
+#     \. /tmp/create-private-key.sh 
+#     \. /tmp/create-public-key.sh 
+#     chmod 400 \$HOME/.ssh/deep-stock-git-key 
+#     eval \"\$(ssh-agent -s)\" 
+#     ssh-add \$HOME/.ssh/deep-stock-git-key 
+#     touch /var/tmp/first-login 
+#     nvm install stable 
+#     echo \"Node version: \" 
+#     node -v 
+#     ssh-keyscan github.com >> \$HOME/.ssh/known_hosts 
+#     git clone git@github.com:CUBigDataClass/DeepStock.git 
+#   fi" 
+# > /etc/profile.d/first-login-prompt.sh
 
   metadata = {
     enable-oslogin="TRUE"
