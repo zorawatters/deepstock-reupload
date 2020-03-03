@@ -6,6 +6,7 @@ from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended import create_access_token
+import json
 
 app = Flask(__name__)
 
@@ -69,6 +70,40 @@ def login():
     else:
         result = jsonify({"result": "No results found"})
     return result
+
+
+'''
+  Storing stock data api
+
+  Gets json data from response body and stores it into database
+'''
+
+@app.route('/users/store_data', methods=['POST'])
+def insert_document():
+    req_data = request.get_json()
+    collection_stock = mongo.db.stocks
+    collection_stock.insert_one(req_data).inserted_id
+    return ('', 204)
+
+
+'''
+  Diplaying stock data api
+
+  Gets all the sotored data in the database and retruns a json file
+'''
+
+@app.route('/users/display_data')
+def get_documents():
+    collection_stock = mongo.db.stocks
+    documents = collection_stock.find()
+    response = []
+
+    for doc in documents:
+        doc['_id'] = str(doc['_id'])
+        response.append(doc)
+
+    return json.dumps(response)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
