@@ -3,7 +3,7 @@
     <h1>{{ msg }}</h1>
     <h2>{{ msg2 }}</h2>
     <p>
-      For a guide and recipes on how to configure / customize this project,<br>
+      hello zora<br>
       check out the
       <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
     </p>
@@ -50,6 +50,19 @@ export default {
   	let domain = url.match(re)[0]
   	console.log(domain)
   	this.msg2 = (await axios.get('http://'+domain+':5000/message')).data
+  },
+  methods: {
+  	logMsg: function(){
+  		console.log(this.msg2);
+  	}
+  },
+  computed: {
+  	date: function(){
+  		return new Date()
+  	},
+  	time: function(){
+  		return new Date.getTime()
+  	}
   }
 }
 </script>
