@@ -23,5 +23,8 @@ instance-config/.terraform
 instance-config/terraform.tfvars
 instance-config/deep-stock-git-key
 instance-config/deep-stock-git-key.pub
+instance-config/keys/
+sftp-config.json
 /venv/
 /__pycache__/
+
