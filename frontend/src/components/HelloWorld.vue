@@ -7,6 +7,7 @@
       {{time}}
       </p>
   </div>
+
 </template>
 
 <script>
@@ -18,7 +19,7 @@ export default {
   },
   data () {
   	return {
-  		msg2: 'test'
+  		msg2: 'This is a test'
   	}
   },
   async mounted(){
