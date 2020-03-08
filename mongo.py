@@ -7,6 +7,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended import create_access_token
 import json
+import yfinance as yf
 
 app = Flask(__name__)
 
@@ -91,6 +92,17 @@ def insert_document():
 
   Gets all the sotored data in the database and retruns a json file
 '''
+
+
+@app.route('/users/historical_data/<string:company>', methods=['PUT'])
+def update_historical_data(company):
+    msft = yf.Ticker("MSFT")
+
+    data = msft.info
+
+    return json.dumps(data)
+
+
 
 @app.route('/users/display_data')
 def get_documents():
