@@ -5,17 +5,29 @@
     <p>
       {{date}}<br>
       {{time}}
-      </p>
+    </p>
+    <h4>Left and Right (or Start and End)</h4>
+   <!--b-card img-src="https://placekitten.com/300/300" img-alt="Card image" img-left class="mb-3">
+     <b-card-text>
+       Some quick example text to build on the card and make up the bulk of the card's content.
+     </b-card-text>
+   </b-card-->
+   <main-card title="Main Graph">Content</main-card>
+   <h1>TESTTTTTT</h1>
   </div>
 
 </template>
 
 <script>
 import axios from 'axios'
+import MainCard from '@/components/MainCard.vue'
 export default {
   name: 'HelloWorld',
   props: {
-    msg: String
+    msg: String,
+  },
+  components: {
+    'main-card': MainCard
   },
   data () {
   	return {
