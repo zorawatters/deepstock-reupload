@@ -5,42 +5,34 @@
     <p>
       {{date}}<br>
       {{time}}
-      </p>
     <h3>Installed CLI Plugins</h3>
     <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-unit-jest" target="_blank" rel="noopener">unit-jest</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-e2e-cypress" target="_blank" rel="noopener">e2e-cypress</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    </p>
+    <h4>Left and Right (or Start and End)</h4>
+   <!--b-card img-src="https://placekitten.com/300/300" img-alt="Card image" img-left class="mb-3">
+     <b-card-text>
+       Some quick example text to build on the card and make up the bulk of the card's content.
+     </b-card-text>
+   </b-card-->
+   <main-card title="Main Graph">Content</main-card>
+   <h1>TESTTTTTT</h1>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import MainCard from '@/components/MainCard.vue'
 export default {
   name: 'HelloWorld',
   props: {
-    msg: String
+    msg: String,
+  },
+  components: {
+    'main-card': MainCard
   },
   data () {
   	return {
-  		msg2: 'test'
+  		msg2: 'This is a test'
   	}
   },
   async mounted(){
