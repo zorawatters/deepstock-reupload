@@ -2,7 +2,12 @@ language: python
 python:
   - "3.5"
 # command to install dependencies
+
+services:
+  - docker
+  
 before_script:
+  - easy_install distribute
 
   - FROM debian:latest
   - EXPOSE 5000
@@ -18,13 +23,9 @@ before_script:
   - RUN python3 -m venv $VIRTUAL_ENV
   - ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-  - easy_install distribute
   - RUN pip3 install -r requirements.txt
 
   - CMD ["gunicorn", "main:app"]
 # command to run tests
 script:
   - pytest
-
-services:
-  - docker
