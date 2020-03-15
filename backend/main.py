@@ -16,7 +16,7 @@ def get_message():
 def get_stock_data():
 	msft = yf.Ticker("MSFT")
 	
-	dataframe = msft.history(period="1d")
+	dataframe = msft.history(period="1")
 	print(dataframe)
 	#dataframe['Date'] = dataframe['Date'].dt.strftime('%Y-%m-%d')
 	return dataframe.reset_index().to_json(orient='records', date_format='iso')	
