@@ -3,9 +3,8 @@ python:
   - "3.5"
 # command to install dependencies
 before_script:
-  - easy_install distribute
 
-  - ROM debian:latest
+  - FROM debian:latest
   - EXPOSE 5000
   - RUN apt-get update -y
   - RUN apt-get install -yq build-essential python3-pip rsync
@@ -19,6 +18,7 @@ before_script:
   - RUN python3 -m venv $VIRTUAL_ENV
   - ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
+  - easy_install distribute
   - RUN pip3 install -r requirements.txt
 
   - CMD ["gunicorn", "main:app"]
