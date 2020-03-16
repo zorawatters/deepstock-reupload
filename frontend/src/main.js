@@ -2,6 +2,15 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import * as d3 from 'd3'
+import loadData from '@/assets/chart.js';
+
+// export defualt {
+//   name:"app",
+//   components:{
+//
+//   }
+// }
 
 Vue.config.productionTip = false
 
@@ -12,6 +21,7 @@ Vue.use(IconsPlugin)
 
 import './assets/bootstrap.css'
 import './assets/bootstrap-vue.css'
+
 
 new Vue({
   router,

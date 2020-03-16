@@ -1,27 +1,23 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>{{ msg2 }}</h2>
+  <div class="container">
     <p>
       {{date}}<br>
       {{time}}
     </p>
-    <h4>Left and Right (or Start and End)</h4>
-   <!--b-card img-src="https://placekitten.com/300/300" img-alt="Card image" img-left class="mb-3">
+   <b-card img-src="https://placekitten.com/300/300" img-alt="Card image" img-left class="mb-3">
      <b-card-text>
        Some quick example text to build on the card and make up the bulk of the card's content.
      </b-card-text>
-   </b-card-->
+   </b-card>
    <b-row class="shadow-lg p-3 mb-5 bg-white rounded col-sm">
-     <main-card title="Main Graph"><div id="chart-element" style=""></div></main-card>
+     <main-card title="Main Graph">Content</main-card>
      <main-card title="Main Graph">{{msg}}</main-card>
-     <main-card title="Main Graph"><div style="width:50px; height:50px; background:black;">Hello</div></main-card>
+     <main-card title="Main Graph"></main-card>
      <main-card title="Main Graph">Content</main-card>
      <main-card title="Main Graph">Content</main-card>
      <main-card title="Main Graph">Content</main-card>
 
    </b-row>
-   <h1>TESTTTTTT</h1>
   </div>
 
 </template>
