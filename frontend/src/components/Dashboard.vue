@@ -16,6 +16,7 @@
      <main-card title="Main Graph">Content</main-card>
      <main-card title="Main Graph">Content</main-card>
      <main-card title="Main Graph">Content</main-card>
+     <p>Data goes here:</p>
 
    </b-row>
   </div>

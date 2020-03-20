@@ -4,9 +4,25 @@ const loadData = d3.json("stockDataExample.json",function(data) {
     // console.log(data);
 
     for (var i = 0; i < data.length; i++) {
-       console.log(data[i].Volume);
+       console.log(data[i].Name);
+       console.log(data[i].Date);
+       console.log(data[i].Open);
        console.log(data[i].High);
+       console.log(data[i].Low);
+       console.log(data[i].Close);
+       console.log(data[i].Volume);
+       console.log(data[i].Dividends);
+       console.log(data[i].StockSplits);
+
+       d3.select("body")
+            .selectAll("p" + i)
+            .data(data)
+            .enter()
+            .append("p")
+            .text(data[i].Name + ", " + data[i].High)
    }
+
+
 
 });
 
