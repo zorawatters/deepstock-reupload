@@ -4,6 +4,7 @@ RUN apt-get update -y
 RUN apt-get install -yq build-essential python3-pip rsync
 RUN apt-get install -yq nginx
 RUN apt-get install -yq python3-venv
+RUN apt-get install -yq curl
 
 # Downloading gcloud package
 RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz > /tmp/google-cloud-sdk.tar.gz
