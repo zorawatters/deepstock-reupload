@@ -2,7 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-import * as d3 from 'd3'
 import loadData from '@/assets/chart.js';
 
 // export defualt {
@@ -13,7 +12,7 @@ import loadData from '@/assets/chart.js';
 // }
 
 Vue.config.productionTip = false
-
+Vue.use(d3)
 // Install BootstrapVue
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
