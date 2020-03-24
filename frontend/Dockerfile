@@ -1,11 +1,9 @@
-FROM node:current-slim
+FROM node:current
+RUN npm install -g http-server
+WORKDIR /deep-stock-frontend
+COPY package*.json ./
+#RUN npm install
+#COPY . .
 
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm cache clean --force
-RUN npm cache verify
-RUN npm install
-COPY . .
-
-EXPOSE 8080
-CMD ["npm", "run", "serve"]
+#EXPOSE 8080
+#CMD ["npm", "run", "serve"]
