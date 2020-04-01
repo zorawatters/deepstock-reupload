@@ -1,20 +1,33 @@
 <template>
-    <div :class="custom">
-      <h1>{{title}}</h1>
+    <div class="card shadow ">
+      <h3>{{name}}</h3>
+      <a style="color: #42b983;" v-bind:href="href" >{{github}}</a>
       <slot></slot>
+
     </div>
 </template>
 <script>
 
 export default {
-  name: 'main-card',
+  name: 'info-card',
   props: {
-    title: {
+    name: {
       type: String,
       default: ''
     },
-    custom:{
+    image: {
+
+    },
+    github:{
       type: String,
+      default: ''
+    },
+    about:{
+      type:String,
+      default: ''
+    },
+    href:{
+      type:String,
       default: ''
     }
   },
