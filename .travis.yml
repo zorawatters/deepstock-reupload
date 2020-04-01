@@ -14,10 +14,11 @@ services:
   - docker
 
 script:
-- cd backend
-- docker build . -t deep-stock-backend:latest
-- docker run -e IV=$encrypted_e7fa7f710305_iv -e KEY=$encrypted_e7fa7f710305_key  -d -p 5000:5000 deep-stock-backend:latest
-- cd ..
+- docker-compose up --build -d
+# - cd backend
+# - docker build . -t deep-stock-backend:latest
+# - docker run -e IV=$encrypted_e7fa7f710305_iv -e KEY=$encrypted_e7fa7f710305_key  -d -p 5000:5000 deep-stock-backend:latest
+# - cd ..
 - openssl aes-256-cbc -K $encrypted_e7fa7f710305_key -iv $encrypted_e7fa7f710305_iv
   -in deep-stock-268818-fce7b0e95509.json.enc -out deep-stock-268818-fce7b0e95509.json
   -d
