@@ -29,7 +29,7 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: ls && chmod +x deploy-prod.sh && deploy-prod.sh
+    script: ls && chmod +x deploy-prod.sh && bash deploy-prod.sh
     skip_cleanup: true
   # provider: gae
   # keyfile: "deep-stock-268818-fce7b0e95509.json"
