@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "We're runing deploy prod"
+
 set -e
 
 docker build -t gcr.io/deep-stock-268818/deep-stock-backend:latest -f backend/Dockerfile .
