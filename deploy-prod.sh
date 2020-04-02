@@ -10,8 +10,9 @@ set -e
 gcloud auth activate-service-account --key-file ./deep-stock-268818-fce7b0e95509.json
 
 # gcloud --quiet config set project deep-stock-268818
-
 ls
+echo "frontend"
+ls frontend/
 gcloud app deploy frontend/app.yaml
 gcould app deploy backend/app.yaml
 
