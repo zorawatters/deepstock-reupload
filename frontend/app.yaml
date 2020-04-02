@@ -1,4 +1,4 @@
-service: frontend
+service: default
 runtime: custom
 env: flex
 skip_files: 
