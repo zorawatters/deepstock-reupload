@@ -1,3 +1,4 @@
 service: backend
+version: test2
 runtime: custom
 env: flex
