@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "We're runing deploy prod"
-
 set -e
 
 # docker build -t us.gcr.io/deep-stock-268818/deep-stock-backend:latest -f backend/Dockerfile ./backend
@@ -10,11 +8,9 @@ set -e
 gcloud auth activate-service-account --key-file ./deep-stock-268818-fce7b0e95509.json
 
 # gcloud --quiet config set project deep-stock-268818
-ls
-echo "frontend dir"
-ls -a frontend/
-gcloud app deploy frontend/
-gcould app deploy backend/
+cd frontend
+gcloud app deploy
+# gcould app deploy backend/
 
 # gcloud docker -- push us.gcr.io/deep-stock-268818/deep-stock-frontend
 # gcloud docker -- push us.gcr.io/deep-stock-268818/deep-stock-backend
