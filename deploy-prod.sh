@@ -4,8 +4,8 @@ echo "We're runing deploy prod"
 
 set -e
 
-docker build -t gcr.io/deep-stock-268818/deep-stock-backend:latest -f backend/Dockerfile .
-docker build -t gcr.io/deep-stock-268818/deep-stock-frontend:latest -f frontend/Dockerfile .
+docker build -t gcr.io/deep-stock-268818/deep-stock-backend:latest -f backend/Dockerfile ./backend
+docker build -t gcr.io/deep-stock-268818/deep-stock-frontend:latest -f frontend/Dockerfile ./frontend
 
 gcloud auth activate-service-account --key-file ${HOME}/deep-stock-268818-fce7b0e95509.json
 
