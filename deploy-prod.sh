@@ -12,7 +12,7 @@ gcloud --quiet config set project deep-stock-268818
 # gcloud app versions list | grep -v SERVING | awk '{print $2}' | tail -n +1 | xargs -I {} gcloud app versions delete {}
 
 gcloud app deploy frontend/
-gcould app deploy backend/
+gcloud app deploy backend/
 
 # gcloud docker -- push us.gcr.io/deep-stock-268818/deep-stock-frontend
 # gcloud docker -- push us.gcr.io/deep-stock-268818/deep-stock-backend
