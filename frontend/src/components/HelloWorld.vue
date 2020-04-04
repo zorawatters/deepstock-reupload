@@ -6,7 +6,6 @@
      <main-card title="News Articles"></main-card>
    </b-row>
   </div>
-
 </template>
 
 <script>
@@ -30,7 +29,7 @@ export default {
   	let re = /[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}/
   	let domain = url.match(re)[0]
   	console.log(domain)
-  	this.msg2 = (await axios.get('http://'+domain+':5000/message')).data
+  	//this.msg2 = (await axios.get('http://'+domain+':5000/message')).data
   },
   methods: {
   	logMsg: function(){
