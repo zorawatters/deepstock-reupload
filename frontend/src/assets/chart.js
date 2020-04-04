@@ -3,7 +3,7 @@ import * as d3 from 'd3'
 
 const loadData = d3.json("stockDataExample.json").then(function(data) {
     console.log(data);
-    line_data = {}
+    var line_data = {}
     for (var i = 0; i < data.length; i++) {
        line_data['timestamp'].push(data[i].date)
        line_date['high'].push(data[i].High)
