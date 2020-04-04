@@ -15,4 +15,4 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip3 install -r requirements.txt
 
 EXPOSE 8080
-CMD ["gunicorn", "main:app", "-b", ":8080", "--timeout", "300"]
+CMD ["gunicorn", "main:app", "-b", ":8080", "--timeout", "300", "--workers", "5"]

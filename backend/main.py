@@ -48,8 +48,7 @@ def addTweet(company):
 @app.route('/users/store_data', methods=['POST'])
 def insert_document():
     req_data = request.get_json()
-    collection_stock = mongo.db.stocks
-    collection_stock.insert_one(req_data).inserted_id
+    collection.insert_one(req_data).inserted_id
     return ('', 204)
 
 
@@ -79,8 +78,7 @@ def update_historical_data(company):
 
 @app.route('/users/display_data')
 def get_documents():
-    collection_stock = mongo.db.stocks
-    documents = collection_stock.find()
+    documents = collection.find()
     response = []
 
     for doc in documents:
@@ -90,4 +88,5 @@ def get_documents():
     return json.dumps(response)
 
 
-app.run(host='0.0.0.0')
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=True)
