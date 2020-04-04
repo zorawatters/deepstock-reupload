@@ -1,6 +1,6 @@
 //Loading data
 import * as d3 from 'd3'
-
+/*
 const loadData = d3.json("stockDataExample.json").then(function(data) {
     console.log(data);
     var line_data = {}
@@ -34,7 +34,7 @@ const loadData = d3.json("stockDataExample.json").then(function(data) {
     volume: quoteData['volume'][index]
   }));
 });
-
+*/
 /*async function get_chart(){
   const stock_json = await d3.json('stockDataExample.json')
 
