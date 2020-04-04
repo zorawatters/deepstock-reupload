@@ -1,12 +1,12 @@
 <template>
 <div :class = "custom">
-  <p>News Articles here </p>
+  <p>Toggle Card</p>
 </div>
 </template>
 <script>
 
   export default {
-    name: 'news-card',
+    name: 'toggle-card',
     props: {
       custom: {
         type: String,
