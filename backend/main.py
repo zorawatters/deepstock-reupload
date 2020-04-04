@@ -37,12 +37,6 @@ def addTweet(company):
     new_tweet = request.get_json()
     collection.update({"ticker" : company}, {'$push': {'tweets': new_tweet}})
 
-@app.route("/<string:company>/tweets", methods=['PUT'])
-def addTweet(company):
-    new_tweet = request.get_json()
-    collection.update({"ticker" : company}, {'$push': {'tweets': new_tweet}})
-
-
 '''
   Storing stock data api
 
