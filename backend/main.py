@@ -1,9 +1,21 @@
 from flask import Flask
 from flask_cors import CORS
+from alpha_vantage.timeseries import TimeSeries
+from flask import request
+from flask_pymongo import pymongo
+from pymongo import MongoClient
 import yfinance as yf
 from alpha_vantage.timeseries import TimeSeries
 import json
+from flask_jsonpify import jsonpify
+
 app = Flask(__name__)
+
+CONNECTION_STRING = "mongodb://deep-stock-cu:deep2020stock@deep-stock-cluster-shard-00-00-bwk5a.gcp.mongodb.net:27017,deep-stock-cluster-shard-00-01-bwk5a.gcp.mongodb.net:27017,deep-stock-cluster-shard-00-02-bwk5a.gcp.mongodb.net:27017/test?ssl=true&replicaSet=deep-stock-cluster-shard-0&authSource=admin&retryWrites=true&w=majority"
+
+client = pymongo.MongoClient(CONNECTION_STRING)
+db = client.get_database('deep-stock')
+collection = db['companies']
 
 CORS(app, resources={r'/*': {'origins': '*'}})
 
@@ -14,7 +26,17 @@ def get_message():
 @app.route('/stock_data')
 def get_stock_data():
 	msft = yf.Ticker("MSFT")
-	print(msft.info)
+
+	dataframe = msft.history(period="1")
+	print(dataframe)
+	#dataframe['Date'] = dataframe['Date'].dt.strftime('%Y-%m-%d')
+	return dataframe.reset_index().to_json(orient='records', date_format='iso')
+
+
+@app.route("/<string:company>/tweets", methods=['PUT'])
+def addTweet(company):
+    new_tweet = request.get_json()
+    collection.update({"ticker" : company}, {'$push': {'tweets': new_tweet}})
 
 
 '''
@@ -26,8 +48,8 @@ def get_stock_data():
 @app.route('/users/store_data', methods=['POST'])
 def insert_document():
     req_data = request.get_json()
-    collection_stock = mongo.db.stocks
-    collection_stock.insert_one(req_data).inserted_id
+
+    collection.insert_one(req_data).inserted_id
     return ('', 204)
 
 
@@ -40,11 +62,6 @@ def insert_document():
 
 @app.route('/company/info/<string:company>', methods=['PUT'])
 def update_historical_data(company):
-    #ts = TimeSeries(key=ALPHA_VANTAGE_API_KEY, output_format='pandas')
-
-    # Get json object with the intraday data and information of the data
-
-    #aapl, meta = ts.get_daily(symbol=company)
 
 
     key = 'CYNCL6X4FUN4SE0K'
@@ -59,8 +76,9 @@ def update_historical_data(company):
 
 @app.route('/users/display_data')
 def get_documents():
-    collection_stock = mongo.db.stocks
-    documents = collection_stock.find()
+
+    documents = collection.find()
+
     response = []
 
     for doc in documents:
@@ -70,4 +88,6 @@ def get_documents():
     return json.dumps(response)
 
 
-app.run(host='0.0.0.0')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=True)

@@ -1,0 +1,23 @@
+language: python
+python:
+- '3.7'
+
+sudo: required
+
+services:
+  - dockers
+
+script:
+  - openssl aes-256-cbc -K $encrypted_e7fa7f710305_key -iv $encrypted_e7fa7f710305_iv
+    -in deep-stock-268818-fce7b0e95509.json.enc -out deep-stock-268818-fce7b0e95509.json
+    -d
+
+before_deploy:
+  - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl -s https://sdk.cloud.google.com | bash; fi
+
+deploy:
+  - provider: script
+    script: ls && chmod +x deploy-prod.sh &&  bash deploy-prod.sh
+    skip_cleanup: true
+    verbosity: debug
+    on: master
