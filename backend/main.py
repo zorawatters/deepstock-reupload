@@ -8,6 +8,14 @@ import yfinance as yf
 from alpha_vantage.timeseries import TimeSeries
 import json
 from flask_jsonpify import jsonpify
+# from dotenv import Dotenv
+# dotenv = Dotenv('./.env')
+# print(dotenv)
+
+from dotenv import load_dotenv
+load_dotenv()
+import os
+
 
 app = Flask(__name__)
 
@@ -60,8 +68,8 @@ def insert_document():
 '''
 
 
-@app.route('/company/info/<string:company>', methods=['PUT'])
-def update_historical_data(company):
+@app.route('/<string:company>/intraday', methods=['GET'])
+def get_intraday(company):
 
 
     key = 'CYNCL6X4FUN4SE0K'
@@ -89,5 +97,7 @@ def get_documents():
 
 
 
-if __name__ == '__main__':
+if os.getenv('environment') == 'dev':
+    app.run(host='0.0.0.0')
+elif __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
