@@ -27,4 +27,7 @@ sftp-config.json
 
 venv/
 __pycache__
+
 frontend/src/variables.js
+.env
+
