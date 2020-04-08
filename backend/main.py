@@ -115,6 +115,12 @@ def get_tweepy():
 
 @app.route('/all_data', methods=['GET'])
 def get_all_data():
-  return 'all data'
+  all_data = collection.find()
+  response = []
+  for x in all_data:
+    x['_id'] = str(x['_id'])
+    response.append(x)
+
+  return json.dumps(response)
 
 app.run(host='0.0.0.0')
