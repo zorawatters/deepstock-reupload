@@ -33,7 +33,8 @@ def test():
     #collection.insert_one({"name" : "test5" , "ticker" : "test5"})
     #addmetadata()
     #addFundamentals('msft')
-    addMetadata('msft')
+    db.order.find({"OrderDateTime":{ $gte:ISODate("2019-02-10"), $lt:ISODate("2019-02-21") }}).pretty();
+
     return ("added metadata now")
 
 
@@ -43,22 +44,20 @@ def addTweet(company):
     new_tweet = request.get_json()
     collection.update({"ticker" : company}, {'$push': {'tweets': new_tweet}})
 
+# adds historicaldata to ticker
 @app.route("/<string:company>/historicaldata", methods=['PUT'])
 def addhist():
     new_hist = request.get_json()
     collection.update({"ticker" : company}, {'$push': {'historical_data': new_hist}})
 
+# adds new company with it's current metadata
 @app.route("/company", methods=['POST'])
 def addcompany():
-    meta = yf.Ticker("company")
     companyObj = request.get_json()
     collection.insert_one(companyObj)
-    #metadata, needs to trim info
-    collection.update({"ticker" : "test5"}, {'$set': {'metaldata': amd.info}})
-    #metadata, needs to trim fundamentals
-    collection.update({"ticker" : "test5"}, {'$push': {'fundamentals': amd.info}})
+    addMetadata("company")
 
-def addFundamentals(company):
+def addmetadata(company): # needs update like addFundamentals
     comp = yf.Ticker(company)
     jsonY = comp.info
     data = {}
@@ -79,43 +78,68 @@ def addFundamentals(company):
     data.update({'fullTimeEmployees' : jsonY['fullTimeEmployees']})
     data.update({'address1' : jsonY['address1']})
     data.update({'longName' : jsonY['longName']})
-    collection.update({"ticker" : "test5"}, {'$set': {'fundamentals': data}}) #for now test5 but change later
+    collection.update({"ticker" : "test5"}, {'$set': {'metadata': data}}) #for now test5 but change later
 
-def addMetadata(company):
+# route to add Fundamentals with current timestamp in NY
+@app.route("/<string:company>/Fundamentals", methods=['PUT'])
+def addFundamentals(company):
     comp = yf.Ticker(company)
     jsonY = comp.info
     td = datetime.now()
     td = td - timedelta(hours=5)
     data = {'date' : td}
-    data.update({'sharesShort' : jsonY['sharesShort']})
-    data.update({'trailingPE' : jsonY['trailingPE']})
-    data.update({'trailingEps' : jsonY['trailingEps']})
-    data.update({'enterpriseToRevenue' : jsonY['enterpriseToRevenue']})
-    data.update({'fiftyDayAverage' : jsonY['fiftyDayAverage']})
-    data.update({'averageDailyVolume10Day' : jsonY['averageDailyVolume10Day']})
-    data.update({'bookValue' : jsonY['bookValue']})
-    data.update({'volume' : jsonY['volume']})
-    data.update({'SandP52WeekChange' : jsonY['SandP52WeekChange']})
-    data.update({'fiftyTwoWeekHigh' : jsonY['fiftyTwoWeekHigh']})
-    data.update({'netIncomeToCommon' : jsonY['netIncomeToCommon']})
-    data.update({'averageVolume10days' : jsonY['averageVolume10days']})
-    data.update({'regularMarketVolume' : jsonY['regularMarketVolume']})
-    data.update({'earningsQuarterlyGrowth' : jsonY['earningsQuarterlyGrowth']})
-    data.update({'52WeekChange' : jsonY['52WeekChange']})
-    data.update({'sharesShortPriorMonth' : jsonY['sharesShortPriorMonth']})
-    data.update({'heldPercentInsiders' : jsonY['heldPercentInsiders']})
-    data.update({'marketCap' : jsonY['marketCap']})
-    data.update({'beta' : jsonY['beta']})
-    data.update({'priceToSalesTrailing12Months' : jsonY['priceToSalesTrailing12Months']})
-    data.update({'shortRatio' : jsonY['shortRatio']})
-    data.update({'averageVolume' : jsonY['averageVolume']})
-    data.update({'shortPercentOfFloat' : jsonY['shortPercentOfFloat']})
-    data.update({'fiftyTwoWeekLow' : jsonY['fiftyTwoWeekLow']})
-    data.update({'forwardPE' : jsonY['forwardPE']})
-    data.update({'profitMargins' : jsonY['profitMargins']})
-    data.update({'heldPercentInstitutions' : jsonY['heldPercentInstitutions']})
-    data.update({'forwardEps' : jsonY['forwardEps']})
-    data.update({'twoHundredDayAverage' : jsonY['twoHundredDayAverage']})
-    collection.update({"ticker" : "test5"}, {'$push': {'metadata': data}})
+    data = (tryObj('sharesShort', jsonY, data))
+    data = (tryObj('trailingPE', jsonY, data))
+    data = (tryObj('trailingEps', jsonY, data))
+    data = (tryObj('enterpriseToRevenue', jsonY, data))
+    data = (tryObj('fiftyDayAverage', jsonY, data))
+    data = (tryObj('averageDailyVolume10Day', jsonY, data))
+    data = (tryObj('bookValue', jsonY, data))
+    data = (tryObj('volume', jsonY, data))
+    data = (tryObj('SandP52WeekChange', jsonY, data))
+    data = (tryObj('fiftyTwoWeekHigh', jsonY, data))
+    data = (tryObj('netIncomeToCommon', jsonY, data))
+    data = (tryObj('averageVolume10days', jsonY, data))
+    data = (tryObj('regularMarketVolume', jsonY, data))
+    data = (tryObj('earningsQuarterlyGrowth', jsonY, data))
+    data = (tryObj('52WeekChange', jsonY, data))
+    data = (tryObj('sharesShortPriorMonth', jsonY, data))
+    data = (tryObj('heldPercentInsiders', jsonY, data))
+    data = (tryObj('marketCap', jsonY, data))
+    data = (tryObj('beta', jsonY, data))
+    data = (tryObj('priceToSalesTrailing12Months', jsonY, data))
+    data = (tryObj('shortRatio', jsonY, data))
+    data = (tryObj('averageVolume', jsonY, data))
+    data = (tryObj('shortPercentOfFloat', jsonY, data))
+    data = (tryObj('fiftyTwoWeekLow', jsonY, data))
+    data = (tryObj('forwardPE', jsonY, data))
+    data = (tryObj('profitMargins', jsonY, data))
+    data = (tryObj('heldPercentInstitutions', jsonY, data))
+    data = (tryObj('forwardEps', jsonY, data))
+    data = (tryObj('twoHundredDayAverage', jsonY, data))
+    collection.update({"ticker" : company}, {'$push': {'Fundamentals': data}})
+    return "Fundamentals added for date: " + str(td)
+
+# def for trying to add object in Fundamentals, as some don't exist in other tickers
+def tryObj(name , jsonY, data):
+    try:
+        data.update({name : jsonY[name]})
+        return data
+    except:
+        return data
+
+@app.route("/testt", methods=['PUT'])
+def testt():
+    td = datetime.now()
+    for i in range(31):
+        data = {'date' : td - timedelta(hours=(i*24 + 5))}
+        data.update({'test1' : 'obj' + str(i)})
+        data.update({'test2' : 'obj' + str(i)})
+        collection.update({"ticker" : 'test5'}, {'$push': {'testt': data}})
+
+
+
+
+
 
 app.run(host='0.0.0.0')
