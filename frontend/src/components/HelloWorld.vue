@@ -1,32 +1,35 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>{{ msg2 }}</h2>
-    <p>
-      {{date}}<br>
-      {{time}}
-      </p>
+   <b-row class="shadow-lg p-3 mb-5 bg-white rounded col-sm">
+     <main-card :title="hello_stocks"></main-card>
+     <main-card title="Twitter Data"></main-card>
+     <main-card title="News Articles"></main-card>
+   </b-row>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import MainCard from '@/components/MainCard.vue'
 export default {
   name: 'HelloWorld',
   props: {
-    msg: String
+    msg: String,
+  },
+  components: {
+    'main-card': MainCard
   },
   data () {
   	return {
-  		msg2: 'test'
+  		msg2: 'This is a test'
   	}
   },
   async mounted(){
-  	let url = window.location.href
-  	let re = /[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}/
-  	let domain = url.match(re)[0]
-  	console.log(domain)
-  	this.msg2 = (await axios.get('http://'+domain+':5000/message')).data
+  	//let url = window.location.href
+  	//let re = /[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}/
+  	//let domain = url.match(re)[0]
+  	//console.log(domain)
+  	this.hello_stocks = (await this.$http.get(this.$backendUrl + '/message')).data
   },
   methods: {
   	logMsg: function(){
