@@ -26,6 +26,7 @@ CORS(app)
 def catch_all(path):
     return 'You want path: %s' % path
 
+
 @app.route('/users/register', methods=['POST'])
 def register():
     users = mongo.db.users
@@ -34,7 +35,7 @@ def register():
     email = request.get_json()['email']
     password = bcrypt.generate_password_hash(request.get_json()['password']).decode('utf-8')
     created = datetime.utcnow()
-
+    
     user_id = users.insert({
         'first_name': first_name,
         'last_name': last_name,

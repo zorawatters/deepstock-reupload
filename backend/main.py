@@ -4,7 +4,6 @@ from alpha_vantage.timeseries import TimeSeries
 from flask import request
 from flask_pymongo import pymongo
 from pymongo import MongoClient
-from pymongo.errors import ServerSelectionTimeoutError
 import yfinance as yf
 from alpha_vantage.timeseries import TimeSeries
 import json
@@ -123,4 +122,8 @@ def get_all_data():
 
   return json.dumps(response)
 
-app.run(host='0.0.0.0')
+
+if os.getenv('environment') == 'dev':
+    app.run(host='0.0.0.0')
+elif __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=True)

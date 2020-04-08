@@ -1,11 +1,10 @@
-FROM node:current-slim
-
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm cache clean --force
-RUN npm cache verify
+FROM node:current
+RUN npm install -g http-server
+WORKDIR /deep-stock-frontend
+COPY package*.json ./
 RUN npm install
 COPY . .
-
+RUN echo "export const backendUrl = 'https://backend-dot-deep-stock-268818.appspot.com/'" > ./src/variables.js
+RUN npm run build
 EXPOSE 8080
-CMD ["npm", "run", "serve"]
+CMD ["http-server", "dist"]
