@@ -1,9 +1,22 @@
 <template>
-  <div class="home">
-    <b-row class="shadow-lg p-3 mb-5 rounded col-sm">
-      <main-card title="Stock" custom ="card shadow col-lg-8"><stock-card custom="bg-primary"></stock-card></main-card>
-      <main-card title="Toggle" custom ="card shadow col-lg-4"><toggle-card custom = "bg-warning"></toggle-card></main-card>
-      <main-card title="Twitter Card" custom ="card shadow col-lg-12"><twitter-card custom = "bg-secondary"></twitter-card></main-card>
+  <div class="container">
+    <b-row class="p-3 mb-2">
+      <div class="offset-lg-1"></div>
+      <main-card title="Stock" custom ="card shadow col-lg-7 p-1">
+        <stock-card custom="bg-secondary"></stock-card>
+      </main-card>
+
+      <main-card title="Toggle" custom ="card shadow col-lg-3 p-1">
+        <toggle-card custom = "bg-warning rounded"></toggle-card>
+        <toggle-card custom = "bg-success rounded"></toggle-card>
+        <toggle-card custom = "bg-danger rounded"></toggle-card>
+        <toggle-card custom = "bg-info rounded"></toggle-card>
+      </main-card>
+    </b-row>
+    <b-row class="p-3 mb-5">
+      <div class="offset-lg-1"></div>
+      <main-card title="Twitter Card" custom ="card shadow col-lg-5 p-1 "><twitter-card custom = "bg-secondary"></twitter-card></main-card>
+      <main-card title="Sentiment Card" custom ="card shadow col-lg-5 p-1 "><sentiment-card custom = "bg-secondary"></sentiment-card></main-card>
     </b-row>
   </div>
 </template>
@@ -14,13 +27,15 @@ import MainCard from '@/components/MainCard.vue'
 import StockCard from '@/components/StockCard.vue'
 import TwitterCard from '@/components/TwitterCard.vue'
 import ToggleCard from '@/components/ToggleCard.vue'
+import SentimentCard from '@/components/SentimentCard.vue'
 export default {
   name: 'Home',
   components: {
     'main-card': MainCard,
     'stock-card': StockCard,
     'twitter-card': TwitterCard,
-    'toggle-card': ToggleCard
+    'toggle-card': ToggleCard,
+    'sentiment-card': SentimentCard
   },
 }
 </script>

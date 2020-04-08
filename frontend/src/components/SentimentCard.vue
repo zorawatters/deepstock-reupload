@@ -1,12 +1,12 @@
 <template>
-<div :class = "custom" style="height: 300px">
-  <p>Stock graph here </p>
+<div :class = "custom">
+  <p>Twitter here </p>
 </div>
 </template>
 <script>
 
   export default {
-    name: 'stock-card',
+    name: 'twitter-card',
     props: {
       custom: {
         type: String,
