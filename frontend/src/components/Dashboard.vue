@@ -48,7 +48,6 @@ export default {
   	let domain = url.match(re)[0]
   	console.log(domain)
   	this.msg2 = (await axios.get('http://'+domain+':5000/message')).data
-    
     this.intraday = (await this.$http.get(this.$backendUrl + '/TSLA/intraday')).data
   },
   methods: {
