@@ -2,8 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-import loadData from '@/assets/chart.js';
-
+import axios from 'axios'
+import { backendUrl } from './variables.js'
 // export defualt {
 //   name:"app",
 //   components:{
@@ -11,6 +11,8 @@ import loadData from '@/assets/chart.js';
 //   }
 // }
 
+Vue.prototype.$http = axios
+Vue.prototype.$backendUrl = backendUrl
 Vue.config.productionTip = false
 // Install BootstrapVue
 Vue.use(BootstrapVue)

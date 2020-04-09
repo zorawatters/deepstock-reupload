@@ -13,6 +13,7 @@ RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN pip3 install -r requirements.txt
+RUN echo "environment=\"prod\"" > ./.env
 
 EXPOSE 8080
 CMD ["gunicorn", "main:app", "-b", ":8080", "--timeout", "300", "--workers", "5"]
