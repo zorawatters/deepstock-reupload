@@ -1,1 +1,1 @@
-export const backendUrl = 'http://YOURINSTANCEIP:5000'
+export const backendUrl = 'http://35.232.122.106:5000'
