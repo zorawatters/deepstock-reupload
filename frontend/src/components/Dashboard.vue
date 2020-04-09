@@ -7,7 +7,7 @@
    <b-card img-src="https://placekitten.com/300/300" img-alt="Card image" img-left class="mb-3">
      <b-card-text>
        Some quick example text to build on the card and make up the bulk of the card's content.
-       <!-- {{intraday}} -->
+       {{intraday}}
      </b-card-text>
    </b-card>
    <b-row class="shadow-lg p-3 mb-5 bg-white rounded col-sm">
@@ -48,7 +48,8 @@ export default {
   	let domain = url.match(re)[0]
   	console.log(domain)
   	this.msg2 = (await axios.get('http://'+domain+':5000/message')).data
-    this.intraday = (await axios.get('http://'+domain+':5000/TSLA/intraday')).data
+    
+    this.intraday = (await this.$http.get(this.$backendUrl + '/TSLA/intraday')).data
   },
   methods: {
   	logMsg: function(){
