@@ -12,7 +12,7 @@ import loadData from '@/assets/chart.js';
 // }
 
 Vue.config.productionTip = false
-Vue.use(d3)
+// Vue.use(d3)
 // Install BootstrapVue
 Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin

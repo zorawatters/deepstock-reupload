@@ -1,6 +1,6 @@
 <template>
 <div :class = "custom">
-  <p>Twitter here </p>
+  <p>Sentiment here </p>
 </div>
 </template>
 <script>
