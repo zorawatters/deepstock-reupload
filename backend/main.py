@@ -5,8 +5,17 @@ from flask import request
 from flask_pymongo import pymongo
 from pymongo import MongoClient
 import yfinance as yf
+from alpha_vantage.timeseries import TimeSeries
 import json
 from flask_jsonpify import jsonpify
+# from dotenv import Dotenv
+# dotenv = Dotenv('./.env')
+# print(dotenv)
+
+from dotenv import load_dotenv
+load_dotenv()
+import os
+
 
 app = Flask(__name__)
 
@@ -37,11 +46,6 @@ def addTweet(company):
     new_tweet = request.get_json()
     collection.update({"ticker" : company}, {'$push': {'tweets': new_tweet}})
 
-@app.route("/<string:company>/tweets", methods=['PUT'])
-def addTweet(company):
-    new_tweet = request.get_json()
-    collection.update({"ticker" : company}, {'$push': {'tweets': new_tweet}})
-
 
 '''
   Storing stock data api
@@ -52,6 +56,7 @@ def addTweet(company):
 @app.route('/users/store_data', methods=['POST'])
 def insert_document():
     req_data = request.get_json()
+
     collection.insert_one(req_data).inserted_id
     return ('', 204)
 
@@ -63,26 +68,25 @@ def insert_document():
 '''
 
 
-@app.route('/company/info/<string:company>', methods=['PUT'])
-def update_historical_data(company):
-    # msft = yf.Ticker("MSFT")
-    #
-    # data = msft.info
+@app.route('/<string:company>/intraday', methods=['GET'])
+def get_intraday(company):
 
 
     key = 'CYNCL6X4FUN4SE0K'
 
-    ts = TimeSeries(key)
+    ts = TimeSeries(key= key)
 
-    aapl, meta = ts.getdaily(symbol='TSL')
+    intraday_data, data_info = ts.get_intraday(symbol=company, outputsize='compact', interval='5min')
 
-    return json.dumps(aapl['2020-12-03'])
+    return json.dumps(intraday_data)
 
 
 
 @app.route('/users/display_data')
 def get_documents():
+
     documents = collection.find()
+
     response = []
 
     for doc in documents:
@@ -92,6 +96,8 @@ def get_documents():
     return json.dumps(response)
 
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
 
+if os.getenv('environment') == 'dev':
+    app.run(host='0.0.0.0')
+elif __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=True)

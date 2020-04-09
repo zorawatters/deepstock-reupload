@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <b-row class="p-3 mb-2">
-      <div class="offset-lg-1"></div>
-      <main-card title="Stock" custom ="card shadow col-lg-7 p-1">
+      <div class="offset-lg-1 offset-md-1"></div>
+      <main-card title="Stock" custom ="card shadow col-lg-7 col-md-7 col-sm-10 p-1">
         <stock-card custom="bg-secondary"></stock-card>
       </main-card>
-
-      <main-card title="Toggle" custom ="card shadow col-lg-3 p-1">
+      <div class="offset-sm-1"></div>
+      <main-card title="Toggle" custom ="card shadow col-lg-3 col-md-3 col-sm-10 p-1">
         <toggle-card custom = "bg-warning rounded"></toggle-card>
         <toggle-card custom = "bg-success rounded"></toggle-card>
         <toggle-card custom = "bg-danger rounded"></toggle-card>
@@ -15,8 +15,9 @@
     </b-row>
     <b-row class="p-3 mb-5">
       <div class="offset-lg-1"></div>
-      <main-card title="Twitter Card" custom ="card shadow col-lg-5 p-1 "><twitter-card custom = "bg-secondary"></twitter-card></main-card>
-      <main-card title="Sentiment Card" custom ="card shadow col-lg-5 p-1 "><sentiment-card custom = "bg-secondary"></sentiment-card></main-card>
+      <main-card title="Twitter Card" custom ="card shadow col-lg-5 col-md-6 col-sm-6 p-1 "><twitter-card custom = "bg-secondary"></twitter-card></main-card>
+      <main-card title="Sentiment Card" custom ="card shadow col-lg-5 col-md-6 col-sm-6 p-1 "><sentiment-card custom = "bg-secondary"></sentiment-card></main-card>
+
     </b-row>
   </div>
 </template>
@@ -37,5 +38,13 @@ export default {
     'toggle-card': ToggleCard,
     'sentiment-card': SentimentCard
   },
+  data(){
+    return {
+      hello_stocks: ''
+    }
+  },
+  async mounted(){
+    this.hello_stocks = (await this.$http.get(this.$backendUrl + '/message')).data
+  }
 }
 </script>
