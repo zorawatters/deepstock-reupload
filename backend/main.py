@@ -8,9 +8,8 @@ import yfinance as yf
 from alpha_vantage.timeseries import TimeSeries
 import json
 from flask_jsonpify import jsonpify
-# from dotenv import Dotenv
-# dotenv = Dotenv('./.env')
-# print(dotenv)
+import datetime
+
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -78,8 +77,32 @@ def get_intraday(company):
 
     intraday_data, data_info = ts.get_intraday(symbol=company, outputsize='compact', interval='5min')
 
-    return json.dumps(intraday_data)
 
+    daily_data = {}
+    days_list = []
+    convert_daytime = 0
+    day = 0
+
+    # Convert string dates to datetime format and append to list
+    for key, value in intraday_data.items():
+        convert_daytime = datetime.datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
+        days_list.append(convert_daytime.day)
+
+
+    # Get latest day
+    latest_day = max(days_list)
+
+    # Add filtered data to new dictionary
+    for key, value in intraday_data.items():
+        convert_daytime = datetime.datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
+        day = convert_daytime.day
+
+        if day == latest_day:
+            if key not in daily_data:
+                daily_data[key] = []
+            daily_data[key].append(value)
+
+    return json.dumps(daily_data)
 
 
 @app.route('/users/display_data')
