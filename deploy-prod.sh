@@ -24,8 +24,8 @@ gcloud docker -- push us.gcr.io/deep-stock-268818/deep-stock-frontend
 gcloud docker -- push us.gcr.io/deep-stock-268818/deep-stock-backend
 # gcloud docker -- push us.gcr.io/deep-stock-268818/deep-stock-nginx
 
-gcloud app deploy --image-url=us.gcr.io/deep-stock-268818/deep-stock-frontend
-gcloud app deploy --image-url=us.gcr.io/deep-stock-268818/deep-stock-backend
+gcloud beta app deploy --image-url=us.gcr.io/deep-stock-268818/deep-stock-frontend
+gcloud beta app deploy --image-url=us.gcr.io/deep-stock-268818/deep-stock-backend
 
 # add tags?
 # yes | gcloud beta container images add-tag us.gcr.io/deep-stock-268818/deep-stock-backend:latest gcr.io/${PROJECT_PROD}/${NGINX_IMAGE}:latest
