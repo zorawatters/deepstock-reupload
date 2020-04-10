@@ -1,92 +1,55 @@
-[
+const chartData = [
   {
-    "Date":"2021-03-06T00:00:00.000Z",
-    "Open":162.61,
-    "High":163.11,
-    "Low":156.0,
-    "Close":161.57,
-    "Volume":72790000,
-    "Dividends":0,
-    "StockSplits":0
+    label: "Venezuela",
+    value: "290"
   },
   {
-    "Date":"2022-03-06T00:00:00.000Z",
-    "Open":163.61,
-    "High":160.11,
-    "Low":146.0,
-    "Close":161.57,
-    "Volume":72821057,
-    "Dividends":3,
-    "StockSplits":0
+    label: "Saudi",
+    value: "260"
   },
   {
-    "Date":"2023-03-06T00:00:00.000Z",
-    "Open":164.61,
-    "High":131.11,
-    "Low":156.0,
-    "Close":161.57,
-    "Volume":72821058,
-    "Dividends":1,
-    "StockSplits":0
+    label: "Canada",
+    value: "180"
   },
   {
-    "Date":"2020-03-06T00:00:00.000Z",
-    "Open":165.61,
-    "High":162.11,
-    "Low":116.0,
-    "Close":161.57,
-    "Volume":72821059,
-    "Dividends":2,
-    "StockSplits":0
+    label: "Iran",
+    value: "140"
   },
   {
-    "Date":"2020-03-06T00:00:00.000Z",
-    "Open":166.61,
-    "High":164.11,
-    "Low":126.0,
-    "Close":161.57,
-    "Volume":72821060,
-    "Dividends":1,
-    "StockSplits":0
+    label: "Russia",
+    value: "115"
   },
   {
-    "Date":"2020-03-06T00:00:00.000Z",
-    "Open":167.61,
-    "High":165.11,
-    "Low":106.0,
-    "Close":161.57,
-    "Volume":72821061,
-    "Dividends":4,
-    "StockSplits":0
+    label: "UAE",
+    value: "100"
   },
   {
-    "Date":"2020-03-06T00:00:00.000Z",
-    "Open":168.61,
-    "High":166.11,
-    "Low":96.0,
-    "Close":161.57,
-    "Volume":72821062,
-    "Dividends":5,
-    "StockSplits":0
+    label: "US",
+    value: "30"
   },
   {
-    "Date":"2020-03-06T00:00:00.000Z",
-    "Open":169.61,
-    "High":167.11,
-    "Low":86.0,
-    "Close":161.57,
-    "Volume":72821063,
-    "Dividends":6,
-    "StockSplits":0
-  },
-  {
-    "Date":"2020-03-06T00:00:00.000Z",
-    "Open":170.61,
-    "High":78.11,
-    "Low":156.0,
-    "Close":161.57,
-    "Volume":72821064,
-    "Dividends":7,
-    "StockSplits":0
+    label: "China",
+    value: "30"
   }
-]
+];
+
+// Create a JSON object to store the chart configurations
+const chartConfigs = {
+  type: "column2d", // The chart type
+  width: "700", // Width of the chart
+  height: "400", // Height of the chart
+  dataFormat: "json", // Data type
+  dataSource: {
+    // Chart Configuration
+    chart: {
+      caption: "Countries With Most Oil Reserves [2017-18]",   //Set the chart caption
+      subCaption: "In MMbbl = One Million barrels",            //Set the chart subcaption
+      xAxisName: "Country",             //Set the x-axis name
+      yAxisName: "Reserves (MMbbl)",    //Set the y-axis name
+      numberSuffix: "K",
+      theme: "fusion"                   //Set the theme for your chart
+    },
+    // Chart Data - from step 2
+    data: chartData
+  }
+};

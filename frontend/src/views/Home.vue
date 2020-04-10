@@ -2,7 +2,7 @@
   <div class="container">
     <b-row class="p-3 mb-2">
       <main-card title="Stock Graph" custom ="card shadow col-lg-7 col-md-7 col-sm-10 p-1">
-        <stock-card custom="bg-secondary"></stock-card>
+        <stock-card custom=""></stock-card>
       </main-card>
       <main-card title="Toggle" custom ="card shadow col-lg-4 col-md-4 col-sm-10 offset-sm-1 p-1">
         <toggle-card custom = "bg-warning rounded m-2" name = "Twitter" ticker = "TWTR" high = "165" low = "154"></toggle-card>
