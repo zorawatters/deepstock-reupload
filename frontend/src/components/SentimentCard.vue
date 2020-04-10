@@ -1,10 +1,7 @@
 <template>
 <div :class = "custom">
-  <b>Trending tweets now:</b>
-  <p>#Alonetogether</p>
-  <p>#CoronaTime!</p>
-  <p>#zoombombmyclassplease</p>
-  <p>#itstheendoftheworldasweknowitandifeelfine</p>
+  <b>Sentiment Analysis:</b>
+  <p style="color:red">The world is falling apart...</p>
 </div>
 </template>
 <script>
