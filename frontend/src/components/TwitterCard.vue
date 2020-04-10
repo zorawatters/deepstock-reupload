@@ -1,6 +1,10 @@
 <template>
 <div :class = "custom">
-  <p>Twitter here </p>
+  <b>Trending tweets now:</b>
+  <p>#Alonetogether</p>
+  <p>#CoronaTime!</p>
+  <p>#zoombombmyclassplease</p>
+  <p>#itstheendoftheworldasweknowitandifeelfine</p>
 </div>
 </template>
 <script>

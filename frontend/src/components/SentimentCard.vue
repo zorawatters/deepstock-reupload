@@ -1,6 +1,7 @@
 <template>
 <div :class = "custom">
-  <p>Sentiment here </p>
+  <b>Sentiment Analysis:</b>
+  <p style="color:red">The world is falling apart...</p>
 </div>
 </template>
 <script>
