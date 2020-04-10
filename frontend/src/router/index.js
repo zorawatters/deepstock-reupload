@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Dashboard from '../views/Dashboard.vue'
+
 
 Vue.use(VueRouter)
 
@@ -20,11 +20,6 @@ const routes = [
     component: function () {
       return import(/* webpackChunkName: "about" */ '../views/About.vue')
     },
-  },
-  {
-    path:'/dashboard',
-    name: 'Dashboard',
-    component: Dashboard
   }
 ]
 
