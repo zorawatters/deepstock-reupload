@@ -1,22 +1,19 @@
 <template>
   <div class="container">
     <b-row class="p-3 mb-2">
-      <div class="offset-lg-1 offset-md-1"></div>
-      <main-card title="Stock" custom ="card shadow col-lg-7 col-md-7 col-sm-10 p-1">
+      <main-card title="Stock Graph" custom ="card shadow col-lg-7 col-md-7 col-sm-10 p-1">
         <stock-card custom="bg-secondary"></stock-card>
       </main-card>
-      <div class="offset-sm-1"></div>
-      <main-card title="Toggle" custom ="card shadow col-lg-3 col-md-3 col-sm-10 p-1">
-        <toggle-card custom = "bg-warning rounded"></toggle-card>
-        <toggle-card custom = "bg-success rounded"></toggle-card>
-        <toggle-card custom = "bg-danger rounded"></toggle-card>
-        <toggle-card custom = "bg-info rounded"></toggle-card>
+      <main-card title="Toggle" custom ="card shadow col-lg-4 col-md-4 col-sm-10 offset-sm-1 p-1">
+        <toggle-card custom = "bg-warning rounded m-2" name = "Twitter" ticker = "TWTR" high = "165" low = "154"></toggle-card>
+        <toggle-card custom = "bg-success rounded m-2" name = "Google" ticker = "GOOGL" high = "170" low = "130"></toggle-card>
+        <toggle-card custom = "bg-danger rounded m-2" name = "Splunk" ticker = "SPLK" high = "190" low = "185"></toggle-card>
+        <toggle-card custom = "bg-info rounded m-2" name = "Tesla" ticker = "TSLA" high = "187" low = "145"></toggle-card>
       </main-card>
     </b-row>
     <b-row class="p-3 mb-5">
-      <div class="offset-lg-1"></div>
-      <main-card title="Twitter Card" custom ="card shadow col-lg-5 col-md-6 col-sm-6 p-1 "><twitter-card custom = "bg-secondary"></twitter-card></main-card>
-      <main-card title="Sentiment Card" custom ="card shadow col-lg-5 col-md-6 col-sm-6 p-1 "><sentiment-card custom = "bg-secondary"></sentiment-card></main-card>
+      <main-card title="Twitter Card" custom ="card shadow col-lg-5 col-md-6 col-sm-6 p-1 offset-lg-1"><twitter-card custom = "bg-secondary"></twitter-card></main-card>
+      <main-card title="Sentiment Card" custom ="card shadow col-lg-5 col-md-6 col-sm-6 p-1 offset-lg-1"><sentiment-card custom = "bg-secondary"></sentiment-card></main-card>
 
     </b-row>
   </div>
