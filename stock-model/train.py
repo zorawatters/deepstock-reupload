@@ -4,10 +4,11 @@ from sklearn.preprocessing import StandardScaler
 import pandas as pd
 import numpy as np
 import tensorflow as tf
+from tensorflow.python.saved_model import tag_constants
 import mlflow.tensorflow
 from builtins import int
-import time
-
+from time import time
+import os
 #mlflow.tensorflow.autolog()
 
 def get_args():
@@ -23,7 +24,6 @@ def _mlflow_log_metrics(metrics, metric_name):
 
 def train_and_evaluate(args):
 	start_time = time()
-	mlflow.log_param('Ticker', args.ticker)
 
 	df = pd.read_csv('https://raw.githubusercontent.com/lazyprogrammer/machine_learning_examples/master/tf2.0/sbux.csv')
 
@@ -62,11 +62,23 @@ def train_and_evaluate(args):
 
 	model = keras_model.build_model(T, D)
 	print(model.summary())
+	
+	with mlflow.start_run(run_name=args.ticker) as active_run:
+		run_id = active_run.info.run_id
+		mlflow.set_tag('runName', args.ticker + '-' + run_id)
 
-	r = model.fit(x_train, y_train, batch_size=args.batch_size, epochs=args.num_epochs, validation_data=(x_test, y_test))
+		r = model.fit(x_train, y_train, batch_size=args.batch_size, epochs=args.num_epochs, validation_data=(x_test, y_test))
+		os.mkdir('mlflow/'+ run_id)
+		model_local_path = os.path.join('mlflow', run_id, 'model')
+		tf.saved_model.save(model, model_local_path)
+		mlflow.tensorflow.log_model(tf_saved_model_dir=model_local_path,
+																tf_meta_graph_tags=[tag_constants.SERVING],
+																tf_signature_def_key='serving_default',
+																artifact_path='model')
+		duration = time() - start_time
+		mlflow.log_metric('duration', duration)
+		mlflow.end_run()
 
-	duration = time() - start_time
-  mlflow.log_metric('duration', duration)
 if __name__ == '__main__':
 	args = get_args()
 	train_and_evaluate(args)
