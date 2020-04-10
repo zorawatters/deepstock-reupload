@@ -1,0 +1,15 @@
+artifact_uri: file:///home/deep-stock/DeepStock/stock-model/mlruns/0/455137e2b0b249b697e5362924cac862/artifacts
+end_time: 1586486868437
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: 455137e2b0b249b697e5362924cac862
+run_uuid: 455137e2b0b249b697e5362924cac862
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1586486864377
+status: 3
+tags: []
+user_id: deep-stock
