@@ -6,7 +6,9 @@ import numpy as np
 import tensorflow as tf
 import mlflow.tensorflow
 from builtins import int
-mlflow.tensorflow.autolog()
+import time
+
+#mlflow.tensorflow.autolog()
 
 def get_args():
 	parser = argparse.ArgumentParser()
@@ -15,8 +17,14 @@ def get_args():
 	parser.add_argument('--batch-size', type=int, default='64')
 	args, _ = parser.parse_known_args()
 	return args
+def _mlflow_log_metrics(metrics, metric_name):
+  for epoch, metric in enumerate(metrics[metric_name], 1): 
+  	mlflow.log_metric(metric_name, metric, step=epoch)
 
 def train_and_evaluate(args):
+	start_time = time()
+	mlflow.log_param('Ticker', args.ticker)
+
 	df = pd.read_csv('https://raw.githubusercontent.com/lazyprogrammer/machine_learning_examples/master/tf2.0/sbux.csv')
 
 	df['PrevClose'] = df['close'].shift(1)
@@ -57,7 +65,8 @@ def train_and_evaluate(args):
 
 	r = model.fit(x_train, y_train, batch_size=args.batch_size, epochs=args.num_epochs, validation_data=(x_test, y_test))
 
+	duration = time() - start_time
+  mlflow.log_metric('duration', duration)
 if __name__ == '__main__':
 	args = get_args()
-	tf.compat.v1.logging.set_verbosity('DEBUG')
 	train_and_evaluate(args)
