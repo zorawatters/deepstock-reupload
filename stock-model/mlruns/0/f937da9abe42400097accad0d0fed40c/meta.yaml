@@ -2,7 +2,7 @@ artifact_uri: file:///home/deep-stock/DeepStock/stock-model/mlruns/0/f937da9abe4
 end_time: 1586487390487
 entry_point_name: ''
 experiment_id: '0'
-lifecycle_stage: active
+lifecycle_stage: deleted
 name: ''
 run_id: f937da9abe42400097accad0d0fed40c
 run_uuid: f937da9abe42400097accad0d0fed40c
