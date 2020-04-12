@@ -1,4 +1,4 @@
-from app import app
+from main import app
 import unittest
 
 class FlaskAppTests(unittest.TestCase):
@@ -20,18 +20,16 @@ class FlaskAppTests(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test_home_status_code(self):
+    def test_get_message(self):
         # sends HTTP GET request to the application
         # on the specified path
-        result = self.app.get('/')
+        result = self.app.get('/message')
 
-        # assert the status code of the response
         self.assertEqual(result.status_code, 200)
 
-    def test_home_data(self):
-        # sends HTTP GET request to the application
-        # on the specified path
-        result = self.app.get('/')
-
         # assert the response data
-        self.assertEqual(result.data, "Hi ! I'm a Flask application.")
+        self.assertEqual(result.data, b'Hello Stonks')
+
+
+if __name__ == '__main__':
+    unittest.main()
