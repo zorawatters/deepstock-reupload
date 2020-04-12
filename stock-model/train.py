@@ -1,4 +1,5 @@
 import keras_model
+import model_deployment
 import argparse
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
@@ -10,6 +11,7 @@ from builtins import int
 from time import time
 import os
 import subprocess
+import logging
 from googleapiclient import discovery
 from google.oauth2 import service_account
 
@@ -21,6 +23,7 @@ def get_args():
 	parser.add_argument('--num-epochs', type=int, default='10')
 	parser.add_argument('--batch-size', type=int, default='64')
 	parser.add_argument('--deploy', action='store_true', default=False)
+	parser.add_argument('--create', action='store_true', default=False)
 	args, _ = parser.parse_known_args()
 	return args
 
@@ -96,53 +99,22 @@ def train_and_evaluate(args):
 		mlflow.log_metric('duration', duration)
 		mlflow.end_run()
 
-	if args.deploy:
+	if args.create or args.deploy:
 		service = discovery.build('ml', 'v1')
 		project_id = 'deep-stock-268818'
 		bucket_name = 'deep-stock-ml-bucket'
 		model_name = args.ticker
 		model_version = 'mlflow_{}'.format(run_id)
 		model_gcs_path = os.path.join('gs://', bucket_name, run_id, 'model')
+		model_helper = model_deployment.AIPlatformModel(project_id)
 		
-		subprocess.call(
-        "gsutil -m cp -r {} {}".format(model_local_path, model_gcs_path),
-        shell=True)
-		try:
-			create_body = {
-				'name': model_name,
-				'regions': 'us-central1',
-				'description': 'MLflow model'
-			}
-			parent = 'projects/{}'.format(project_id)
-			service_projects = service.projects()
-			print('p', service_projects)
-			service_models = service_projects.models()
-			print('m', service_models)
-			service_request = service_models.create(parent=parent, body=create_body)
-			print('r', service_request.to_json())
-			service_request.execute()
-		except:
-			print("create model failure")
+		model_helper.upload_to_bucket(model_local_path, model_gcs_path)
+		model_helper.create_model(model_name)
 		
-		#try:
-		deploy_body = {
-			'name': model_version,
-			'deploymentUri': 'gs://{}/{}/model'.format(bucket_name, run_id),
-			'framework': 'TENSORFLOW',
-			'runtimeVersion': '1.14',
-			'pythonVersion': '3.5'
-		}
-		parent = 'projects/{}/models/{}'.format(project_id, model_name)
-		print(parent)
-		service_version = service.projects().models().versions().create(
-				parent=parent, body=deploy_body)
-		print('v', service_version.to_json())
-		response = service_version.execute()
-		#except:
-		#	print('deploy model failure')
-		"""
-		#test predict
-		""" 
+		if args.deploy:
+			model_helper.deploy_model(model_gcs_path, model_name, run_id)
+			logging.info('Model Deployment complete')
+
 		#gcloud ai-platform local predict --model-dir mlflow/eb7746fb07084d43892873db2a100f5b/model/ --json-instances local-predict.json --framework tensorflow"""
 if __name__ == '__main__':
 	args = get_args()
