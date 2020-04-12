@@ -1,7 +1,3 @@
 service: backend
 runtime: custom
 env: flex
-handlers:
-- url: /*
-  http_headers:
-    Access-Control-Allow-Origin: *
