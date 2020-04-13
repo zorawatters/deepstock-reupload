@@ -5,13 +5,11 @@ from flask import request
 from flask_pymongo import pymongo
 from pymongo import MongoClient
 import yfinance as yf
-<<<<<<< HEAD
 import tweepy
 from tweepy.parsers import JSONParser
 from tweepy.streaming import StreamListener
 import json
 from twitter import TwitterClient
-=======
 from alpha_vantage.timeseries import TimeSeries
 import json
 from flask_jsonpify import jsonpify
@@ -23,7 +21,6 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 
->>>>>>> 073ebfce4ba5af9fde00e860d062e6de3d860066
 
 app = Flask(__name__)
 
