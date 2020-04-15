@@ -20,11 +20,12 @@ gcloud app deploy backend/ --stop-previous-version
 # gcloud app deploy nginx/ --stop-previous-version
 
 # send images to gcr
-# gcloud docker -- push us.gcr.io/deep-stock-268818/deep-stock-frontend
-# gcloud docker -- push us.gcr.io/deep-stock-268818/deep-stock-backend
+gcloud docker -- push us.gcr.io/deep-stock-268818/deep-stock-frontend
+gcloud docker -- push us.gcr.io/deep-stock-268818/deep-stock-backend
 # gcloud docker -- push us.gcr.io/deep-stock-268818/deep-stock-nginx
 
 # deploy from gcr
+# doing this deployed both images to default rather than deploying backend image to the backend service
 # gcloud app deploy --image-url=us.gcr.io/deep-stock-268818/deep-stock-frontend
 # gcloud app deploy --image-url=us.gcr.io/deep-stock-268818/deep-stock-backend
 
