@@ -28,6 +28,7 @@ python-dotenv==0.12.0
 pytz==2019.3
 requests==2.23.0
 six==1.14.0
+textblob==0.15.3
 toolwrapper==1.0.0
 uctools==1.2.1
 urllib3==1.25.8
