@@ -22,63 +22,52 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 def get_message():
   return 'Hello Stonks'
 
-@app.route('/stock_data')
-def get_stock_data():
-	msft = yf.Ticker("MSFT")
-	return (str(msft.info))
-
-
 @app.route('/test')
 def test():
-    #collection.insert_one({"name" : "test5" , "ticker" : "test5"})
-    #addmetadata()
-    #addFundamentals('msft')
-    db.order.find({"OrderDateTime":{ $gte:ISODate("2019-02-10"), $lt:ISODate("2019-02-21") }}).pretty();
+    return ("all added")
 
-    return ("added metadata now")
+# adds historicaldata to ticker and retrieves all historical data from db
+@app.route("/<string:company>/historicaldata", methods=['PUT' , 'GET'])
+def addhist(company):
+    if request.method == 'PUT': ## NEDS UPDATING
+        new_hist = request.get_json()
+        collection.update({"ticker" : company}, {'$push': {'historical': new_hist}})
+        return ("Historical data added to: " + company)
+    if request.method == 'GET':
+        obj = collection.find_one({"ticker": company})
+        return obj['historical']
 
-
-# appends tweets to company tweets
-@app.route("/<string:company>/tweets", methods=['PUT'])
-def addTweet(company):
-    new_tweet = request.get_json()
-    collection.update({"ticker" : company}, {'$push': {'tweets': new_tweet}})
-
-# adds historicaldata to ticker
-@app.route("/<string:company>/historicaldata", methods=['PUT'])
-def addhist():
-    new_hist = request.get_json()
-    collection.update({"ticker" : company}, {'$push': {'historical_data': new_hist}})
 
 # adds new company with it's current metadata
 @app.route("/company", methods=['POST'])
 def addcompany():
     companyObj = request.get_json()
     collection.insert_one(companyObj)
-    addMetadata("company")
+    addMetadata(companyObj['ticker'])
+    addhist2year(companyObj['ticker'])
 
-def addmetadata(company): # needs update like addFundamentals
+# Adds the metadata to database base on ticker
+def addMetadata(company):
     comp = yf.Ticker(company)
     jsonY = comp.info
     data = {}
-    print(type(jsonY))
-    data.update({'shortName' : jsonY['shortName']})
-    data.update({'logo_url' : jsonY['logo_url']})
-    data.update({'website' : jsonY['website']})
-    data.update({'symbol' : jsonY['symbol']})
-    data.update({'city' : jsonY['city']})
-    data.update({'phone' : jsonY['phone']})
-    data.update({'industry' : jsonY['industry']})
-    data.update({'country' : jsonY['country']})
-    data.update({'state' : jsonY['state']})
-    data.update({'currency' : jsonY['currency']})
-    data.update({'longBusinessSummary' : jsonY['longBusinessSummary']})
-    data.update({'zip' : jsonY['zip']})
-    data.update({'sector' : jsonY['sector']})
-    data.update({'fullTimeEmployees' : jsonY['fullTimeEmployees']})
-    data.update({'address1' : jsonY['address1']})
-    data.update({'longName' : jsonY['longName']})
-    collection.update({"ticker" : "test5"}, {'$set': {'metadata': data}}) #for now test5 but change later
+    data = tryObj('shortName', jsonY, data)
+    data = tryObj('logo_url', jsonY, data)
+    data = tryObj('website', jsonY, data)
+    data = tryObj('symbol', jsonY, data)
+    data = tryObj('city', jsonY, data)
+    data = tryObj('phone', jsonY, data)
+    data = tryObj('industry', jsonY, data)
+    data = tryObj('country', jsonY, data)
+    data = tryObj('state', jsonY, data)
+    data = tryObj('currency', jsonY, data)
+    data = tryObj('longBusinessSummary', jsonY, data)
+    data = tryObj('zip', jsonY, data)
+    data = tryObj('sector', jsonY, data)
+    data = tryObj('fullTimeEmployees', jsonY, data)
+    data = tryObj('address1', jsonY, data)
+    data = tryObj('longName', jsonY, data)
+    collection.update({"ticker" : company}, {'$set': {'metadata': data}}) #for now test5 but change later
 
 # route to add Fundamentals with current timestamp in NY
 @app.route("/<string:company>/Fundamentals", methods=['PUT'])
@@ -88,7 +77,7 @@ def addFundamentals(company):
     td = datetime.now()
     td = td - timedelta(hours=5)
     data = {'date' : td}
-    data = (tryObj('sharesShort', jsonY, data))
+    data = tryObj('sharesShort', jsonY, data)
     data = (tryObj('trailingPE', jsonY, data))
     data = (tryObj('trailingEps', jsonY, data))
     data = (tryObj('enterpriseToRevenue', jsonY, data))
@@ -118,7 +107,7 @@ def addFundamentals(company):
     data = (tryObj('forwardEps', jsonY, data))
     data = (tryObj('twoHundredDayAverage', jsonY, data))
     collection.update({"ticker" : company}, {'$push': {'Fundamentals': data}})
-    return "Fundamentals added for date: " + str(td)
+    return "Fundamentals added to: " +  comapny +  " for date: " + str(td)
 
 # def for trying to add object in Fundamentals, as some don't exist in other tickers
 def tryObj(name , jsonY, data):
@@ -128,18 +117,30 @@ def tryObj(name , jsonY, data):
     except:
         return data
 
-@app.route("/testt", methods=['PUT'])
-def testt():
-    td = datetime.now()
-    for i in range(31):
-        data = {'date' : td - timedelta(hours=(i*24 + 5))}
-        data.update({'test1' : 'obj' + str(i)})
-        data.update({'test2' : 'obj' + str(i)})
-        collection.update({"ticker" : 'test5'}, {'$push': {'testt': data}})
+def getOne(ticker, ):
+    startdate = datetime(2020,4,4)
+    enddate = datetime(2020,4,5)
+    obj = collection.find_one({"ticker": "test5"})
+    for i in obj['testt']:
+        if i['date'] > startdate and i['date'] < enddate:
+            return i
 
+def getlist(ticker, ): # DAY TO today
+    startdate = datetime(2020,4,4)
+    enddate = datetime(2020,4,5)
+    obj = collection.find_one({"ticker": "test5"})
+    for i in obj['testt']:
+        if i['date'] > startdate and i['date'] < enddate:
+            return i
 
-
-
-
+def addhist2year(company):
+  comp = yf.Ticker(company)
+  hist = comp.history(period="24mo")
+  hist2 = hist.to_dict('index')
+  for i in hist2:
+    tmp = {'date' : i}
+    tmp.update(hist2[i])
+    collection.update({"ticker" : company}, {'$push': {'historical': tmp}})
+  return ("added")
 
 app.run(host='0.0.0.0')
