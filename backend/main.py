@@ -70,6 +70,8 @@ def insert_document():
 @app.route('/<string:company>/intraday', methods=['GET'])
 def get_intraday(company):
 
+    print("getting called")
+
 
     key = 'CYNCL6X4FUN4SE0K'
 
