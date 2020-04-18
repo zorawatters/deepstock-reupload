@@ -233,7 +233,7 @@ def get_tweepy(ticker):
     # might need to write condition to make sure tweets with same unique ID aren't duplicated
 
     # get date from iso datetime string
-    tweet_date = datetime.strptime(tweet['date'], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
+    tweet_date = datetime.datetime.strptime(tweet['date'], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
 
     #check if there is already a date object for tweet_date
     tweet_array = collection.find_one({"ticker" : ticker })["tweets"]
