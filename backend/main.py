@@ -102,11 +102,11 @@ def get_tweepy(ticker):
   api = TwitterClient()
 
   # calling function to get tweets 
-  tweets = api.get_tweets(query = ticker, count = 5) 
+  tweets = api.get_tweets(query = ticker, count = 500) 
 
   # store in mongodb
   for tweet in tweets:
-    # need to write condition to make sure tweets with same unique ID aren't duplicated
+    # might need to write condition to make sure tweets with same unique ID aren't duplicated
 
     # get date from iso datetime string
     tweet_date = datetime.strptime(tweet['date'], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
@@ -119,16 +119,22 @@ def get_tweepy(ticker):
     if not tweet_date_exists:
         collection.update({"ticker" : ticker}, {'$push': {'tweets': {'date':tweet_date, 'day_sentiment': 0, 'tweets':[]}}})
 
-    # recalculate day sentiment avg for each tweet added
-    day_object = next((x for x in tweet_array if x["date"] == tweet_date), None)
-    avg_day_sentiment = day_object["day_sentiment"]
-
-    # calculate new average
-    updated_avg_day_sentiment = ((avg_day_sentiment * len(day_object["tweets"])) + tweet["sentiment"])/(len(day_object["tweets"]) + 1)
-    print(updated_avg_day_sentiment)
-
     # add tweet to tweets array
     collection.update({"ticker" : ticker, "tweets.date": tweet_date}, {'$push': {'tweets.$.tweets': tweet}} )
+
+    # recalculate day sentiment avg for each tweet added
+    day_object = next((x for x in tweet_array if x["date"] == tweet_date), None)
+
+    if day_object is None:
+        avg_day_sentiment = 0
+        updated_avg_day_sentiment = tweet["scaled_sentiment"]
+    else:
+        avg_day_sentiment = day_object["day_sentiment"]
+        updated_avg_day_sentiment = ((avg_day_sentiment * len(day_object["tweets"])) + tweet["scaled_sentiment"])/(len(day_object["tweets"]) + 1)
+
+
+    # calculate new average
+    print(updated_avg_day_sentiment)
 
     # update daily sentiment
     collection.update({"ticker" : ticker, "tweets.date": tweet_date}, {'$set': {'tweets.$.day_sentiment': updated_avg_day_sentiment}} )

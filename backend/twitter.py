@@ -74,6 +74,7 @@ class TwitterClient(object):
                 parsed_tweet['date'] = tweet.created_at.isoformat()
                 # saving sentiment of tweet 
                 parsed_tweet['sentiment'] = self.get_tweet_sentiment(tweet.text) 
+                parsed_tweet['scaled_sentiment'] = parsed_tweet['sentiment'] * (1 + (0.01 * parsed_tweet['followers_count'])) * (1+(0.01 * parsed_tweet['retweet_count'])) * (1 +(0.01 * parsed_tweet['favorite_count']))
 
                 # appending parsed tweet to tweets list 
                 if tweet.retweet_count > 0: 
