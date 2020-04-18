@@ -12,6 +12,7 @@ from tweepy.parsers import JSONParser
 from tweepy.streaming import StreamListener
 from twitter import TwitterClient
 from flask_jsonpify import jsonpify
+from datetime import datetime
 # from dotenv import Dotenv
 # dotenv = Dotenv('./.env')
 # print(dotenv)
@@ -23,10 +24,10 @@ import os
 app = Flask(__name__)
 
 CONNECTION_STRING = "mongodb://deep-stock-cu:deep2020stock@deep-stock-cluster-shard-00-00-bwk5a.gcp.mongodb.net:27017,deep-stock-cluster-shard-00-01-bwk5a.gcp.mongodb.net:27017,deep-stock-cluster-shard-00-02-bwk5a.gcp.mongodb.net:27017/test?ssl=true&replicaSet=deep-stock-cluster-shard-0&authSource=admin&retryWrites=true&w=majority"
-
 client = pymongo.MongoClient(CONNECTION_STRING)
 db = client.get_database('deep-stock')
 collection = db['companies']
+
 
 CORS(app, resources={r'/*': {'origins': '*'}})
 
@@ -124,57 +125,38 @@ def get_documents():
 
 #     return json.dumps(tweets)
 
-@app.route('/tweepy', methods=['GET'])
-def get_tweepy():
-    # api_secret_key = '4n84JSQuX4qnZFt1jBVYOSbl8eA6mvOwSMbbtOjlpYX1cQQ6y0'
-    # api_key = 'HFozqhWZcH3P2cUXsyBSZrf6P'
-    # access_token = '341961921-uZrcljPNobyBflSXuZSYrnNZZLZ5r37FZbE6gmMX'
-    # access_token_secret = 'fXKPY5rQLbXYTRCYVJPsDUEBqCr5lt3wKZiMBbE4F2i8W'
-
-    # auth = tweepy.OAuthHandler(api_key, api_secret_key)
-    # auth.set_access_token(access_token, access_token_secret)
-  # api = tweepy.API(auth, parser = JSONParser())
-
-  # # search = request.args.get('q')
-  # # print(search)
-  # # public_tweets = api.user_timeline(search)
-  # # print(public_tweets)
-  # #creating a stream of tweets through tweepy
-  # tweetStreamListener = TweetListener()
-  # tweetStream = tweepy.Stream(auth = auth, listener = tweetStreamListener)
-  # tweetStream.filter(track = ['tesla stocks']) #looking for tweets about tesla
-  # return "got it"
-  # creating object of TwitterClient Class 
-  print("b4")
+@app.route('/tweepy/<string:ticker>', methods=['GET'])
+def get_tweepy(ticker):
   api = TwitterClient()
-  print("got api")
+
   # calling function to get tweets 
-  tweets = api.get_tweets(query = 'TSLA', count = 200) 
+  tweets = api.get_tweets(query = ticker, count = 5) 
 
-  # picking positive tweets from tweets 
-  ptweets = [tweet for tweet in tweets if tweet['sentiment'] == 'positive'] 
-  # percentage of positive tweets 
-  print("Positive tweets percentage: {} %".format(100*len(ptweets)/len(tweets))) 
-  # picking negative tweets from tweets 
-  ntweets = [tweet for tweet in tweets if tweet['sentiment'] == 'negative'] 
-  # percentage of negative tweets 
-  print("Negative tweets percentage: {} %".format(100*len(ntweets)/len(tweets))) 
-  # percentage of neutral tweets 
- # print("Neutral tweets percentage: {} %".format(100*len(tweets - ntweets - ptweets)/len(tweets))) 
+  # store in mongodb
+  for tweet in tweets:
+    # need to write condition to make sure tweets with same unique ID aren't duplicated
 
-  # printing first 5 positive tweets 
-  print("\n\nPositive tweets:") 
-  for tweet in ptweets[:10]: 
-    print(tweet['text']) 
+    # get date from iso datetime string
+    tweet_date = datetime.strptime(tweet['date'], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
 
-  #  printing first 5 negative tweets 
-  print("\n\nNegative tweets:") 
-  for tweet in ntweets[:10]: 
-    print(tweet['text']) 
+    #check if there is already a date object for tweet_date
+    tweet_array = collection.find_one({"ticker" : ticker })["tweets"]
+    tweet_date_exists = any(x for x in tweet_array if x["date"] == tweet_date)
 
-  # add to mongodb 
+    # if date object doesn't exist yet, add it 
+    if not tweet_date_exists:
+        collection.update({"ticker" : ticker}, {'$push': {'tweets': {'date':tweet_date, 'day_sentiment': "", 'tweets':[]}}})
 
-  return ntweets[0]
+    collection.update({"ticker" : ticker, "tweets.date": tweet_date}, {'$push': {'tweets.$.tweets': tweet}} )
+
+  return json.dumps(tweets, 200)
+
+# this deletes all tweets for a specified company (for testing)
+@app.route('/cleartweets/<string:ticker>', methods=['GET'])
+def clear_tweets(ticker):
+    collection.update({"ticker" : ticker}, { "$set": {"tweets": []}})
+
+    return "cleared tweets for " + ticker
 
 
 if os.getenv('environment') == 'dev':

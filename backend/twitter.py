@@ -42,13 +42,14 @@ class TwitterClient(object):
         # create TextBlob object of passed tweet text 
         analysis = TextBlob(self.clean_tweet(tweet)) 
         # set sentiment 
-        if analysis.sentiment.polarity > 0: 
-            return 'positive'
-        elif analysis.sentiment.polarity == 0: 
-            return 'neutral'
-        else: 
-            return 'negative'
-  
+        # if analysis.sentiment.polarity > 0: 
+        #     return 'positive'
+        # elif analysis.sentiment.polarity == 0: 
+        #     return 'neutral'
+        # else: 
+        #     return 'negative'
+        return analysis.sentiment.polarity
+
     def get_tweets(self, query, count = 10): 
         ''' 
         Main function to fetch tweets and parse them. 
@@ -63,13 +64,17 @@ class TwitterClient(object):
             # parsing tweets one by one 
             for tweet in fetched_tweets: 
                 # empty dictionary to store required params of a tweet 
-                parsed_tweet = {} 
-  
+                parsed_tweet = {}
                 # saving text of tweet 
-                parsed_tweet['text'] = tweet.text 
+                parsed_tweet['unique_id'] = tweet.id
+                parsed_tweet['text'] = tweet.text
+                parsed_tweet['followers_count'] = tweet.user.followers_count 
+                parsed_tweet['retweet_count'] = tweet.retweet_count
+                parsed_tweet['favorite_count'] = tweet.favorite_count
+                parsed_tweet['date'] = tweet.created_at.isoformat()
                 # saving sentiment of tweet 
                 parsed_tweet['sentiment'] = self.get_tweet_sentiment(tweet.text) 
-  
+
                 # appending parsed tweet to tweets list 
                 if tweet.retweet_count > 0: 
                     # if tweet has retweets, ensure that it is appended only once 
