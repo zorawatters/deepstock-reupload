@@ -97,34 +97,6 @@ def get_documents():
 
     return json.dumps(response)
 
-# @app.route('/tweepy')
-# def get_tweepy():
-#     api_secret_key = '4n84JSQuX4qnZFt1jBVYOSbl8eA6mvOwSMbbtOjlpYX1cQQ6y0'
-#     api_key = 'HFozqhWZcH3P2cUXsyBSZrf6P'
-#     access_token = '341961921-uZrcljPNobyBflSXuZSYrnNZZLZ5r37FZbE6gmMX'
-#     access_token_secret = 'fXKPY5rQLbXYTRCYVJPsDUEBqCr5lt3wKZiMBbE4F2i8W'
-#     auth = tweepy.OAuthHandler(api_key, api_secret_key)
-#     auth.set_access_token(access_token, access_token_secret)
-#     api = tweepy.API(auth, parser = JSONParser())
-#     tweets = []
-#     f = open('companies.json',) 
-#     data = json.load(f) 
-#     for i in data['companies']:
-#         # make call to tweepy api here and store in mongodb for each company
-#         public_tweets = api.search(i, count = 3)
-#         for tweet in public_tweets['statuses']:
-#             tweet_json_string = {"ticker": '', "text": '', "id": ''}
-#             tweet_json_dump = json.dumps(tweet_json_string)
-#             tweet_json_object = json.loads(tweet_json_dump)
-#             tweet_json_object["ticker"] = i;
-#             tweet_json_object["text"] = tweet["text"];
-#             tweet_json_object["id"] = tweet["id_str"];
-#             tweets.append(tweet_json_object)
-          
-#     f.close() 
-
-#     return json.dumps(tweets)
-
 @app.route('/tweepy/<string:ticker>', methods=['GET'])
 def get_tweepy(ticker):
   api = TwitterClient()
@@ -145,13 +117,25 @@ def get_tweepy(ticker):
 
     # if date object doesn't exist yet, add it 
     if not tweet_date_exists:
-        collection.update({"ticker" : ticker}, {'$push': {'tweets': {'date':tweet_date, 'day_sentiment': "", 'tweets':[]}}})
+        collection.update({"ticker" : ticker}, {'$push': {'tweets': {'date':tweet_date, 'day_sentiment': 0, 'tweets':[]}}})
 
+    # recalculate day sentiment avg for each tweet added
+    day_object = next((x for x in tweet_array if x["date"] == tweet_date), None)
+    avg_day_sentiment = day_object["day_sentiment"]
+
+    # calculate new average
+    updated_avg_day_sentiment = ((avg_day_sentiment * len(day_object["tweets"])) + tweet["sentiment"])/(len(day_object["tweets"]) + 1)
+    print(updated_avg_day_sentiment)
+
+    # add tweet to tweets array
     collection.update({"ticker" : ticker, "tweets.date": tweet_date}, {'$push': {'tweets.$.tweets': tweet}} )
+
+    # update daily sentiment
+    collection.update({"ticker" : ticker, "tweets.date": tweet_date}, {'$set': {'tweets.$.day_sentiment': updated_avg_day_sentiment}} )
 
   return json.dumps(tweets, 200)
 
-# this deletes all tweets for a specified company (for testing)
+# this deletes all tweets in database for a specified company
 @app.route('/cleartweets/<string:ticker>', methods=['GET'])
 def clear_tweets(ticker):
     collection.update({"ticker" : ticker}, { "$set": {"tweets": []}})
