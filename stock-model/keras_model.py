@@ -7,6 +7,8 @@ from tensorflow.keras.optimizers import Adam
 def build_model(T, D):	
 	i = Input(shape=(T, D))
 	x = LSTM(50)(i)
+	x = LSTM(50)(x)
+	x = LSTM(25)(x)
 	x = Dense(1, activation='sigmoid')(x)
 	model = Model(i, x)
 	model.compile(loss='binary_crossentropy', optimizer=Adam(lr=.001), metrics=['accuracy'])

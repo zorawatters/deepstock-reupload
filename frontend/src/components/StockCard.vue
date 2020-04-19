@@ -1,82 +1,103 @@
 <template>
-<div :class = "custom" id="chart-container">
-      <fusioncharts
-      :type="type"
-      :width="width"
-      :height="height"
-      :dataformat="dataFormat"
-      :dataSource="dataSource"
-      >
-      </fusioncharts>
+<div :class = "custom">
+  <fusioncharts
+  :type="type"
+  :width="width"
+  :height="height"
+  :dataformat="dataFormat"
+  :dataSource="dataSource"
+  ></fusioncharts>
 </div>
 </template>
 <script>
-// STEP 2: Prepare the data
-const chartData = [
-    {
-      label: "Venezuela",
-      value: "290"
-    },
-    {
-      label: "Saudi",
-      value: "260"
-    },
-    {
-      label: "Canada",
-      value: "180"
-    },
-    {
-      label: "Iran",
-      value: "140"
-    },
-    {
-      label: "Russia",
-      value: "115"
-    },
-    {
-      label: "UAE",
-      value: "100"
-    },
-    {
-      label: "US",
-      value: "30"
-    },
-    {
-      label: "China",
-      value: "30"
-    }
-  ];
-
-// STEP 3: Configure your chart
-const dataSource = {
-  chart: {
-    caption: "Countries With Most Oil Reserves [2017-18]",
-    subcaption: "In MMbbl = One Million barrels",
-    xaxisname: "Country",
-    yaxisname: "Reserves (MMbbl)",
-    numbersuffix: "K",
-    theme: "fusion"
-  },
-  data: chartData
-  };
-
+const d = [
+  ['2020-04-17 10:05:00', 700],
+  ['2020-04-17 13:25:00', 500],
+  ['2020-04-17 14:30:00', 600],
+  ['2020-04-17 15:30:00', 740]
+]
 export default {
   name: 'stock-card',
   props: {
     custom: {
       type: String,
       default: ''
+    },
+    ticker: {
+      type: String,
+      default: 'TSLA'
     }
   },
   data() {
     return {
-      "type": "column2d",
-      "renderAt": "chart-container",
-      "width": "550",
-      "height": "350",
-      "dataFormat": "json",
-      dataSource
+      type: "timeseries",
+      width: "550",
+      height: "350",
+      dataFormat: "json",
+      chartData: [],
+      dataStore: new FusionCharts.DataStore(),
+      schema: [{
+        name: "Time",
+        type: "date",
+        format: "%Y-%m-%d %-H:%M:%S"
+      }, {
+        name: "Price",
+        type: "number"
+      }]
     }
+  },
+  async mounted(){
+    this.getIntraday()
+    setInterval(this.getIntraday, 600000)
+  },
+  methods:{
+    getIntraday: async function(){
+      var response = await this.$http.get(this.$backendUrl + '/' + this.ticker + '/intraday')
+      var data = response.data
+      this.chartData = []
+
+      for(var datetime in data){
+        this.chartData.push([datetime, Number(data[datetime][0]['4. close'])])
+
+      }
+    }
+  },
+  computed:{
+    dataSource: function(){
+
+      var r =  {
+        chart: {},
+        caption: {
+          text: "Intraday movements of " + this.ticker
+        },
+        yaxis: [
+          {
+            plot: [
+              {
+                  value: "Price",
+                  //type: 'line',
+                  connectnulldata: true,
+                  style: {
+                    "plot.null": {
+                      "stroke-dasharray": "none",
+                    }
+                  }
+              }
+            ]
+          }
+        ],
+        //numbersuffix: "K",
+        theme: "fusion",
+        data: this.dataStore.createDataTable(this.chartData, this.schema)
+      }
+      console.log(r)
+      return r
+    }
+  },
+  watch:{
+  	ticker: function(newVal){
+  		this.getIntraday()
+  	}
   }
 }
 
