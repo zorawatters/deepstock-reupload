@@ -211,7 +211,7 @@ def get_intraday(company):
 
     # Convert string dates to datetime format and append to list
     for key, value in intraday_data.items():
-        convert_daytime = datetime.datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
+        convert_daytime = datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
         days_list.append(convert_daytime.day)
 
 
@@ -220,7 +220,7 @@ def get_intraday(company):
 
     # Add filtered data to new dictionary
     for key, value in intraday_data.items():
-        convert_daytime = datetime.datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
+        convert_daytime = datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
         day = convert_daytime.day
 
         if day == latest_day:
@@ -256,7 +256,7 @@ def get_tweepy(ticker):
     # might need to write condition to make sure tweets with same unique ID aren't duplicated
 
     # get date from iso datetime string
-    tweet_date = datetime.datetime.strptime(tweet['date'], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
+    tweet_date = datetime.strptime(tweet['date'], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
 
     #check if there is already a date object for tweet_date
     tweet_array = collection.find_one({"ticker" : ticker })["tweets"]
