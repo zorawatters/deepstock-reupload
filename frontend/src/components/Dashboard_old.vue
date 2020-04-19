@@ -45,19 +45,13 @@ export default {
   },
   componentDidMount() {
     this.mounted()
-    setInterval(this.mounted, 10000);
+    setInterval(this.mounted, 30000);
   },
   async mounted(){
-    alert("Calling api")
-  	let url = window.location.href
-  	let re = /[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}/
-  	let domain = url.match(re)[0]
-  	console.log(domain)
-  	this.msg2 = (await axios.get('http://'+domain+':5000/message')).data
     this.intraday = (await this.$http.get(this.$backendUrl + '/TSLA/intraday')).data
   },
   methods: {
-  	logMsg: function(){
+  	getInraday: function(){
   		console.log(this.msg2);
   	}
   },
