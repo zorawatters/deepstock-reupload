@@ -64,30 +64,39 @@ export default {
   },
   computed:{
     dataSource: function(){
-      
+
       var r =  {
+        caption: {
+          text: "Intraday movements of " + this.ticker
+        },
         chart: {
-          caption: "Intraday movements of " + this.ticker,
-          //subcaption: "In MMbbl = One Million barrels",
-          xaxisname: "Time",
-          yaxis: [
-            {
-              plot: [
-                {
-                  value: "Price",
-                  type: 'line',
-                  style: {
-                    plot: {
-                      "stroke-dasharray": "5 2"
+
+        },
+        xaxisname: "Time",
+        yaxis: [
+          {
+            plot: [
+              {
+                value: "Price",
+                type: 'line',
+                style: {
+                  plot: {
+                    //"stroke-dasharray": "5 2",
+                    connectnulldata: true,
+                    style: {
+                      "plot.null": {
+                        "stroke-dasharray": "none",
+                        stroke: "#FF0000"
+                      }
                     }
                   }
                 }
-              ]
-            }
-          ],
-          //numbersuffix: "K",
-          theme: "fusion"
-        },
+              }
+            ]
+          }
+        ],
+        //numbersuffix: "K",
+        theme: "fusion",
         data: this.dataStore.createDataTable(this.chartData, this.schema)
       }
       console.log(r)
