@@ -1,7 +1,7 @@
 <template>
 <div :class = "custom">
   <!-- <p>{{ticker}} - {{name}} <t> <a style="color:28a745"> {{high}} </a>|<a style="color:dc3545"> {{low}} </a></p> -->
-    <p> <a style = "color:dc3545">{{ticker}}</a> {{metadata.shortName}} <img :src="metadata.logo_url"> {{metadata.website}}></p>
+    <p> <a style = "color:dc3545">{{ticker}}</a> {{metadata.shortName}} <img :src="metadata.logo_url" width = "50" height = "50"></p>
 </div>
 </template>
 <script>
@@ -23,7 +23,9 @@
     data(){
       return {
         metadata: {
-
+          shortName : '',
+          logo_url : '',
+          website : ''
         }
       }
     },

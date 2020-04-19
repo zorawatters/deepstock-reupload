@@ -17,7 +17,7 @@ import os
 
 app = Flask(__name__)
 
-CONNECTION_STRING = "mongodb://deep-stock-cu:deep2020stock@deep-stock-cluster-shard-00-00-bwk5a.gcp.mongodb.net:27017,deep-stock-cluster-shard-00-01-bwk5a.gcp.mongodb.net:27017,deep-stock-cluster-shard-00-02-bwk5a.gcp.mongodb.net:27017/test?ssl=true&replicaSet=deep-stock-cluster-shard-0&authSource=admin&retryWrites=true&w=majority"
+CONNECTION_STRING = "mongodb://deep-stock-cu:" + os.getenv('d_pass') + "@deep-stock-cluster-shard-00-00-bwk5a.gcp.mongodb.net:27017,deep-stock-cluster-shard-00-01-bwk5a.gcp.mongodb.net:27017,deep-stock-cluster-shard-00-02-bwk5a.gcp.mongodb.net:27017/test?ssl=true&replicaSet=deep-stock-cluster-shard-0&authSource=admin&retryWrites=true&w=majority"
 
 client = pymongo.MongoClient(CONNECTION_STRING)
 db = client.get_database('deep-stock')
@@ -54,10 +54,6 @@ def getMetadata(company):
     obj = collection.find_one({'ticker' : company})
     return obj['metadata']
 
-@app.route("/metadata", methods=['GET'])
-def getMetadata2():
-    obj = collection.find_one({'ticker' : 'TSLA'})
-    return obj['metadata']
 
 @app.route("/<string:company>/prediction", methods=['GET']) # MAYBE CHANGE RETURN FROM LIST TO SOMETHING ELSE
 def get_2weekhist(company):
