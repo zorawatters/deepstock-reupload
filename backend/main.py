@@ -14,7 +14,6 @@ from tweepy.parsers import JSONParser
 from tweepy.streaming import StreamListener
 from twitter import TwitterClient
 from flask_jsonpify import jsonpify
-import datetime
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -23,6 +22,7 @@ import os
 app = Flask(__name__)
 
 CONNECTION_STRING = "mongodb://deep-stock-cu:deep2020stock@deep-stock-cluster-shard-00-00-bwk5a.gcp.mongodb.net:27017,deep-stock-cluster-shard-00-01-bwk5a.gcp.mongodb.net:27017,deep-stock-cluster-shard-00-02-bwk5a.gcp.mongodb.net:27017/test?ssl=true&replicaSet=deep-stock-cluster-shard-0&authSource=admin&retryWrites=true&w=majority"
+
 client = pymongo.MongoClient(CONNECTION_STRING)
 db = client.get_database('deep-stock')
 collection = db['companies']
@@ -55,6 +55,24 @@ def addcompany():
     collection.insert_one(companyObj)
     addMetadata(companyObj['ticker'])
     addhist2year(companyObj['ticker'])
+
+@app.route("/<string:company>/metadata", methods=['GET'])
+def getMetadata(company):
+    obj = collection.find_one({'ticker' : company})
+    return obj['metadata']
+
+
+@app.route("/<string:company>/prediction", methods=['GET']) # MAYBE CHANGE RETURN FROM LIST TO SOMETHING ELSE
+def get_2weekhist(company):
+    comp = yf.Ticker(company)
+    hist = comp.history(period="14d")
+    hist2 = hist.to_dict('index')
+    pred = []
+    for i in hist2:
+      tmp = {'date' : i}
+      tmp.update(hist2[i])
+      pred.append(tmp)
+    return pred
 
 # Adds the metadata to database base on ticker
 def addMetadata(company):
@@ -117,7 +135,7 @@ def addFundamentals(company):
     data = (tryObj('forwardEps', jsonY, data))
     data = (tryObj('twoHundredDayAverage', jsonY, data))
     collection.update({"ticker" : company}, {'$push': {'Fundamentals': data}})
-    return "Fundamentals added to: " +  comapny +  " for date: " + str(td)
+    return "Fundamentals added to: " +  company +  " for date: " + str(td)
 
 # def for trying to add object in Fundamentals, as some don't exist in other tickers
 def tryObj(name , jsonY, data):
@@ -127,21 +145,24 @@ def tryObj(name , jsonY, data):
     except:
         return data
 
-def getOne(ticker, ):
-    startdate = datetime(2020,4,4)
-    enddate = datetime(2020,4,5)
-    obj = collection.find_one({"ticker": "test5"})
-    for i in obj['testt']:
+def getOne(ticker, date):
+    date2 = date - timedelta(hours=24)
+    startdate = datetime.strptime(date,'%Y-%m-%d')
+    enddate = datetime.strptime(date2 ,'%Y-%m-%d')
+    obj = collection.find_one({"ticker": ticker})
+    for i in obj['historical']:
         if i['date'] > startdate and i['date'] < enddate:
             return i
 
-def getlist(ticker, ): # DAY TO today
-    startdate = datetime(2020,4,4)
-    enddate = datetime(2020,4,5)
-    obj = collection.find_one({"ticker": "test5"})
-    for i in obj['testt']:
+def getlist(ticker, days): # Make sure is days
+    enddate = datetime.now()
+    startdate = enddate - timedelta(hours=24*days)
+    obj = collection.find_one({"ticker": ticker})
+    hist = []
+    for i in obj['historical']:
         if i['date'] > startdate and i['date'] < enddate:
-            return i
+            hist.append(i)
+    return hist
 
 def addhist2year(company):
   comp = yf.Ticker(company)
@@ -193,7 +214,7 @@ def get_intraday(company):
 
     # Convert string dates to datetime format and append to list
     for key, value in intraday_data.items():
-        convert_daytime = datetime.datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
+        convert_daytime = datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
         days_list.append(convert_daytime.day)
 
 
@@ -202,7 +223,7 @@ def get_intraday(company):
 
     # Add filtered data to new dictionary
     for key, value in intraday_data.items():
-        convert_daytime = datetime.datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
+        convert_daytime = datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
         day = convert_daytime.day
 
         if day == latest_day:
@@ -238,7 +259,7 @@ def get_tweepy(ticker):
     # might need to write condition to make sure tweets with same unique ID aren't duplicated
 
     # get date from iso datetime string
-    tweet_date = datetime.datetime.strptime(tweet['date'], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
+    tweet_date = datetime.strptime(tweet['date'], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
 
     #check if there is already a date object for tweet_date
     tweet_array = collection.find_one({"ticker" : ticker })["tweets"]

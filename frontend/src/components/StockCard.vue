@@ -67,6 +67,9 @@ export default {
 
       var r =  {
         chart: {},
+        navigator: {
+          enabled: 0
+        },
         caption: {
           text: "Intraday movements of " + this.ticker
         },
