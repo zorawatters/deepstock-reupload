@@ -9,7 +9,6 @@ from datetime import tzinfo, timedelta, datetime
 from alpha_vantage.timeseries import TimeSeries
 import json
 from flask_jsonpify import jsonpify
-import datetime
 
 
 from dotenv import load_dotenv
@@ -49,6 +48,28 @@ def addcompany():
     collection.insert_one(companyObj)
     addMetadata(companyObj['ticker'])
     addhist2year(companyObj['ticker'])
+
+@app.route("/<string:company>/metadata", methods=['GET'])
+def getMetadata(company):
+    obj = collection.find_one({'ticker' : company})
+    return obj['metadata']
+
+@app.route("/metadata", methods=['GET'])
+def getMetadata2():
+    obj = collection.find_one({'ticker' : 'TSLA'})
+    return obj['metadata']
+
+@app.route("/<string:company>/prediction", methods=['GET']) # MAYBE CHANGE RETURN FROM LIST TO SOMETHING ELSE
+def get_2weekhist(company):
+    comp = yf.Ticker(company)
+    hist = comp.history(period="14d")
+    hist2 = hist.to_dict('index')
+    pred = []
+    for i in hist2:
+      tmp = {'date' : i}
+      tmp.update(hist2[i])
+      pred.append(tmp)
+    return pred
 
 # Adds the metadata to database base on ticker
 def addMetadata(company):
@@ -111,7 +132,7 @@ def addFundamentals(company):
     data = (tryObj('forwardEps', jsonY, data))
     data = (tryObj('twoHundredDayAverage', jsonY, data))
     collection.update({"ticker" : company}, {'$push': {'Fundamentals': data}})
-    return "Fundamentals added to: " +  comapny +  " for date: " + str(td)
+    return "Fundamentals added to: " +  company +  " for date: " + str(td)
 
 # def for trying to add object in Fundamentals, as some don't exist in other tickers
 def tryObj(name , jsonY, data):
@@ -121,21 +142,24 @@ def tryObj(name , jsonY, data):
     except:
         return data
 
-def getOne(ticker, ):
-    startdate = datetime(2020,4,4)
-    enddate = datetime(2020,4,5)
-    obj = collection.find_one({"ticker": "test5"})
-    for i in obj['testt']:
+def getOne(ticker, date):
+    date2 = date - timedelta(hours=24)
+    startdate = datetime.strptime(date,'%Y-%m-%d')
+    enddate = datetime.strptime(date2 ,'%Y-%m-%d')
+    obj = collection.find_one({"ticker": ticker})
+    for i in obj['historical']:
         if i['date'] > startdate and i['date'] < enddate:
             return i
 
-def getlist(ticker, ): # DAY TO today
-    startdate = datetime(2020,4,4)
-    enddate = datetime(2020,4,5)
-    obj = collection.find_one({"ticker": "test5"})
-    for i in obj['testt']:
+def getlist(ticker, days): # Make sure is days
+    enddate = datetime.now()
+    startdate = enddate - timedelta(hours=24*days)
+    obj = collection.find_one({"ticker": ticker})
+    hist = []
+    for i in obj['historical']:
         if i['date'] > startdate and i['date'] < enddate:
-            return i
+            hist.append(i)
+    return hist
 
 def addhist2year(company):
   comp = yf.Ticker(company)
