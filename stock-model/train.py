@@ -34,11 +34,12 @@ def _mlflow_log_metrics(metrics, metric_name):
 
 def train_and_evaluate(args):
 	start_time = time()
-	url = 'http://35.222.54.209:5000/' + args.ticker + '/historicaldata'
+	url = 'https://backend-dot-deep-stock-268818.appspot.com/' + args.ticker + '/historicaldata'
 	try:
 		hist_data = requests.get(url)
 	except requests.exceptions.RequestException as e:
 		raise SystemExit(e)
+	
 	df = pd.DataFrame(hist_data.json())
 	df.sort_values('date')
 	#df = pd.read_json('{'+hist_data.json()+'}')
