@@ -70,14 +70,18 @@ export default {
         caption: {
           text: "Intraday movements of " + this.ticker
         },
-        xaxisname: "Time",
         yaxis: [
           {
             plot: [
               {
                   value: "Price",
-                  type: 'line',
+                  //type: 'line',
                   connectnulldata: true,
+                  style: {
+                    "plot.null": {
+                      "stroke-dasharray": "none",
+                    }
+                  }
               }
             ]
           }
