@@ -13,7 +13,7 @@
           </b-row>
           <b-row>
             <router-link to="/">Dashboard</router-link> |
-            <router-link to="/about">About</router-link>
+            <router-link to="/about">About</router-link> 
           </b-row>
         </b-col>
       </b-row>

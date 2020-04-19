@@ -26,6 +26,7 @@ import StockCard from '@/components/StockCard.vue'
 import TwitterCard from '@/components/TwitterCard.vue'
 import ToggleCard from '@/components/ToggleCard.vue'
 import SentimentCard from '@/components/SentimentCard.vue'
+
 export default {
   name: 'Home',
   components: {

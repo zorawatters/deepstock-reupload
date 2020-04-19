@@ -173,6 +173,8 @@ def insert_document():
 @app.route('/<string:company>/intraday', methods=['GET'])
 def get_intraday(company):
 
+    print("getting called")
+
 
     key = 'CYNCL6X4FUN4SE0K'
 
@@ -225,8 +227,8 @@ def get_documents():
 def get_tweepy(ticker):
   api = TwitterClient()
 
-  # calling function to get tweets 
-  tweets = api.get_tweets(query = ticker, count = 500) 
+  # calling function to get tweets
+  tweets = api.get_tweets(query = ticker, count = 500)
 
   # store in mongodb
   for tweet in tweets:
@@ -239,7 +241,7 @@ def get_tweepy(ticker):
     tweet_array = collection.find_one({"ticker" : ticker })["tweets"]
     tweet_date_exists = any(x for x in tweet_array if x["date"] == tweet_date)
 
-    # if date object doesn't exist yet, add it 
+    # if date object doesn't exist yet, add it
     if not tweet_date_exists:
         collection.update({"ticker" : ticker}, {'$push': {'tweets': {'date':tweet_date, 'day_sentiment': 0, 'tweets':[]}}})
 
@@ -277,4 +279,3 @@ if os.getenv('environment') == 'dev':
     app.run(host='0.0.0.0')
 elif __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
-

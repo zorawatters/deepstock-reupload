@@ -6,10 +6,10 @@ import axios from 'axios'
 import { backendUrl } from './variables.js'
 import VueFusionCharts from 'vue-fusioncharts';
 import FusionCharts from 'fusioncharts';
-import Column2D from 'fusioncharts/fusioncharts.charts';
+import TimeSeries from 'fusioncharts/fusioncharts.timeseries';
 import FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
 
-Vue.use(VueFusionCharts, FusionCharts, Column2D, FusionTheme);
+Vue.use(VueFusionCharts, FusionCharts, TimeSeries, FusionTheme);
 // export defualt {
 //   name:"app",
 //   components:{
