@@ -66,31 +66,18 @@ export default {
     dataSource: function(){
 
       var r =  {
+        chart: {},
         caption: {
           text: "Intraday movements of " + this.ticker
-        },
-        chart: {
-
         },
         xaxisname: "Time",
         yaxis: [
           {
             plot: [
               {
-                value: "Price",
-                type: 'line',
-                style: {
-                  plot: {
-                    //"stroke-dasharray": "5 2",
-                    connectnulldata: true,
-                    style: {
-                      "plot.null": {
-                        "stroke-dasharray": "none",
-                        stroke: "#FF0000"
-                      }
-                    }
-                  }
-                }
+                  value: "Price",
+                  type: 'line',
+                  connectnulldata: true,
               }
             ]
           }
