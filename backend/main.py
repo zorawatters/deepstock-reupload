@@ -8,6 +8,7 @@ import yfinance as yf
 from datetime import tzinfo, timedelta, datetime
 from alpha_vantage.timeseries import TimeSeries
 import json
+from bson import json_util
 import tweepy
 from tweepy.parsers import JSONParser
 from tweepy.streaming import StreamListener
@@ -39,10 +40,12 @@ def addhist(company):
     if request.method == 'PUT': ## NEDS UPDATING
         new_hist = request.get_json()
         collection.update({"ticker" : company}, {'$push': {'historical': new_hist}})
-        return ("Historical data added to: " + company)
+        return("Historical data added to: " + company)
     if request.method == 'GET':
         obj = collection.find_one({"ticker": company})
-        return obj['historical']
+        #print(obj['historical'][:10])
+        return json.dumps(obj['historical'], indent=4, sort_keys=True, default=str)
+        #return json.dumps(obj['historical'], default=json_util.default)
 
 
 # adds new company with it's current metadata
@@ -77,7 +80,7 @@ def addMetadata(company):
     collection.update({"ticker" : company}, {'$set': {'metadata': data}}) #for now test5 but change later
 
 # route to add Fundamentals with current timestamp in NY
-@app.route("/<string:company>/Fundamentals", methods=['PUT'])
+@app.route("/<string:company>/fundamentals", methods=['PUT'])
 def addFundamentals(company):
     comp = yf.Ticker(company)
     jsonY = comp.info
