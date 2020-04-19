@@ -48,7 +48,7 @@ export default {
   },
   async mounted(){
     this.getIntraday()
-    setInterval(this.getIntraday, 10000)
+    setInterval(this.getIntraday, 600000)
   },
   methods:{
     getIntraday: async function(){
@@ -93,6 +93,11 @@ export default {
       console.log(r)
       return r
     }
+  },
+  watch:{
+  	ticker: function(newVal){
+  		this.getIntraday()
+  	}
   }
 }
 
