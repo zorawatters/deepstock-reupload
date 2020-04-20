@@ -8,6 +8,7 @@
       :dataSource="dataSource"
       >
       </fusioncharts>
+      Hello
 </div>
 </template>
 <script>

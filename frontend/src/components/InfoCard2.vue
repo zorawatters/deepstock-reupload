@@ -19,7 +19,7 @@ export default {
       default: ''
     },
     image: {
-      type:String,
+      type: String,
       default: ""
     },
     github:{
@@ -27,7 +27,7 @@ export default {
       default: ''
     },
     about:{
-      type:String,
+      type: String,
       default: ''
     },
     href:{
