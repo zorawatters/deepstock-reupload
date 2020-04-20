@@ -1,7 +1,7 @@
 <template>
 <div :class = "custom">
   <!-- <p>{{ticker}} - {{name}} <t> <a style="color:28a745"> {{high}} </a>|<a style="color:dc3545"> {{low}} </a></p> -->
-    <p> <a style = "color:dc3545">{{ticker}}</a> {{name}} {{high}} {{low}} </p>
+    <p> <a style = "color:dc3545">{{ticker}}</a> {{metadata.shortName}} <img :src="metadata.logo_url" width = "50" height = "50"></p>
 </div>
 </template>
 <script>
@@ -13,26 +13,26 @@
         type: String,
         default: ''
       },
-      name: {
-        type: String,
-        default: ''
-      },
+
       ticker: {
         type: String,
         default: ''
       },
-      high:{
-        type: String,
-        default: ''
-      },
-      low: {
-        type: String,
-        default: ''
-      }
+
     },
     data(){
       return {
+        metadata: {
+          shortName : '',
+          logo_url : '',
+          website : ''
+        }
       }
+    },
+    async mounted(){
+      var tick = '/'
+      tick = tick + this.ticker
+      this.metadata = (await this.$http(this.$backendUrl + tick +'/metadata')).data
     }
   }
 </script>
