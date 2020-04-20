@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <b-row class="p-3 mb-2">
-      <main-card title="Stock Graph" custom ="card shadow col-lg-7 col-md-7 col-sm-10 p-1">
+      <main-card title="Stock Graph" custom ="card shadow col-lg-7 col-md-7 col-sm-10 p-1" :ticker="ticker">
         <stock-card custom=""></stock-card>
       </main-card>
       <main-card title="Toggle" custom ="card shadow col-lg-4 col-md-4 col-sm-10 offset-sm-1 p-1">
@@ -12,8 +12,8 @@
       </main-card>
     </b-row>
     <b-row class="p-3 mb-5">
-      <main-card title="Twitter Card" custom ="card shadow col-lg-5 col-md-6 col-sm-6 p-1 offset-lg-1"><twitter-card custom = "bg-secondary"></twitter-card></main-card>
-      <main-card title="Sentiment Card" custom ="card shadow col-lg-5 col-md-6 col-sm-6 p-1 offset-lg-1"><sentiment-card custom = "bg-secondary"></sentiment-card></main-card>
+      <main-card title="Twitter Card" custom ="card shadow col-lg-5 col-md-6 col-sm-6 p-1 offset-lg-1"><twitter-card custom = "bg-secondary" :ticker="ticker"></twitter-card></main-card>
+      <main-card title="Sentiment Card" custom ="card shadow col-lg-5 col-md-6 col-sm-6 p-1 offset-lg-1"><sentiment-card custom = "bg-secondary" :ticker="ticker"></sentiment-card></main-card>
 
     </b-row>
   </div>
@@ -36,8 +36,9 @@ export default {
     'sentiment-card': SentimentCard
   },
   data(){
+
     return {
-      hello_stocks: ''
+      ticker:""
     }
   },
   async mounted(){
