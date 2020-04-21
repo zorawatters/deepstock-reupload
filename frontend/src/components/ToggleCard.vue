@@ -8,19 +8,19 @@
             <div class="card-body p-2 m-1 ">
               <h6 style = "color:#42b983; align:right" class="card-title">{{ticker}}</h6>
               [
-              <a class="text-success">321</a><a style="padding-left:.25em "></a>
+              <a class="text-success">${{currentPrice.toFixed(2)}}</a><a style="padding-left:.25em "></a>
               <a style="padding-right:.25em "></a>
 
               |
 
               <a style="padding-left:.25em "></a>
-              <a class="text-danger">123</a>
+              <a class="text-danger">{{percentChange.toFixed(2)}}%</a>
               ]
               <!-- <p class="card-text">INSERT TWEET HERE</p>
               <a href="#" class="btn btn-primary">Link to tweet/bio?</a> -->
             </div>
             <div class="card-footer text-muted">
-              {{metadata.shortName}} the name of the company
+              {{metadata.shortName}}
             </div>
 
           </b-row>
@@ -33,6 +33,8 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
+
 
 export default {
   name: 'toggle-card',
@@ -54,7 +56,7 @@ export default {
         shortName : '',
         logo_url : '',
         website : ''
-      }
+      },
     }
   },
   methods:{
@@ -63,9 +65,28 @@ export default {
     }
   },
   async mounted(){
-    var tick = '/'
-    tick = tick + this.ticker
-    this.metadata = (await this.$http(this.$backendUrl + tick +'/metadata')).data
+    this.metadata = (await this.$http(this.$backendUrl + '/'+ this.ticker +'/metadata')).data
+  },
+  computed: {
+    ...mapGetters({
+      //metadata: 'getMetadata',
+      companyInfo: 'getStockData'
+    }),
+    currentPrice(){
+      var cd = this.companyInfo(this.ticker)['chartData']
+      if(cd){
+        return Number.parseFloat(cd[cd.length-1][1])
+      }else{
+        return 0
+      }
+    },
+    percentChange(){
+      var cd = this.companyInfo(this.ticker)['chartData']
+      if(cd){
+        var open = Number.parseFloat(cd[0][1])
+        return (((this.currentPrice - open) / open))*100
+      }
+    }
   }
 }
 </script>

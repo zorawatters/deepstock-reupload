@@ -44,10 +44,11 @@ var store = new Vuex.Store({
     	if(!state.stockData[getters.getTicker]){
 				state.stockData[getters.getTicker] = {}
 			}
-			return (getters.getStockData[getters.getTicker]['chartData'])
+			return (getters.getStockData(getters.getTicker)['chartData'])
+			//return (getters.getStockData[getters.getTicker]['chartData'])
     },
     getStockData: (state) => {
-    	return (state.stockData)
+    	return company => state.stockData[company]
     },
   },
   mutations:{
@@ -83,10 +84,10 @@ var store = new Vuex.Store({
 					//axios.get(backendUrl + '/' + state.ticker + '/intraday').then(response => {
 						var cd = []
 
-						cd = [['2020-04-17 10:05:00', counter],
-								  ['2020-04-17 13:25:00', 500],
+						cd = [['2020-04-17 10:05:00', 400],
+								  ['2020-04-17 13:25:00', counter],
 								  ['2020-04-17 14:30:00', 600],
-								  ['2020-04-17 15:30:00', 740]]
+								  ['2020-04-17 15:30:00', counter*3]]
 						counter += 100
 						//for(var datetime in response.data){
 						//	cd.push([datetime, Number(response.data[datetime][0]['4. close'])])
