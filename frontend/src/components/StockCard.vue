@@ -1,26 +1,13 @@
 <template>
-<<<<<<< HEAD
-<div :class = "custom" id="chart-container">
-      <fusioncharts
-      :type="type"
-      :width="width"
-      :height="height"
-      :dataformat="dataFormat"
-      :dataSource="dataSource"
-      >
-      </fusioncharts>
-      Hello
-=======
-<div :class = "custom">
-  <fusioncharts
-  :type="type"
-  :width="width"
-  :height="height"
-  :dataformat="dataFormat"
-  :dataSource="dataSource"
-  ></fusioncharts>
->>>>>>> master
-</div>
+  <div :class = "custom">
+    <fusioncharts
+    :type="type"
+    :width="width"
+    :height="height"
+    :dataformat="dataFormat"
+    :dataSource="dataSource"
+    ></fusioncharts>
+  </div>
 </template>
 <script>
 const d = [
@@ -29,16 +16,15 @@ const d = [
   ['2020-04-17 14:30:00', 600],
   ['2020-04-17 15:30:00', 740]
 ]
+
+import { mapState } from 'vuex';
+
 export default {
   name: 'stock-card',
   props: {
     custom: {
       type: String,
       default: ''
-    },
-    ticker: {
-      type: String,
-      default: 'TSLA'
     }
   },
   data() {
@@ -65,6 +51,7 @@ export default {
   },
   methods:{
     getIntraday: async function(){
+      console.log("Getting it for this.ticker")
       var response = await this.$http.get(this.$backendUrl + '/' + this.ticker + '/intraday')
       var data = response.data
       this.chartData = []
@@ -76,7 +63,7 @@ export default {
     }
   },
   computed:{
-    dataSource: function(){
+    dataSource(){
 
       var r =  {
         chart: {},
@@ -90,14 +77,14 @@ export default {
           {
             plot: [
               {
-                  value: "Price",
-                  //type: 'line',
-                  connectnulldata: true,
-                  style: {
-                    "plot.null": {
-                      "stroke-dasharray": "none",
-                    }
+                value: "Price",
+                //type: 'line',
+                connectnulldata: true,
+                style: {
+                  "plot.null": {
+                    "stroke-dasharray": "none",
                   }
+                }
               }
             ]
           }
@@ -108,13 +95,29 @@ export default {
       }
       console.log(r)
       return r
-    }
+    },
+    ...mapState(['ticker'])
+    // ticker:
+    //   {
+    //     console.log("Computer Called")
+    //     return this.$store.getters.getTicker
+    //   }
   },
-  watch:{
-  	ticker: function(newVal){
-  		this.getIntraday()
-  	}
-  }
+
+  created(){
+    this.$store.watch(
+      (state)=>{
+        return this.$store.state.ticker // could also put a Getter here
+      },
+      (newValue, oldValue)=>{
+        //something changed do something
+        console.log(oldValue)
+        console.log(newValue)
+        this.getIntraday()
+      }
+    )
+  },
+
 }
 
 </script>
