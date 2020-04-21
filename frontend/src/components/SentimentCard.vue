@@ -7,7 +7,7 @@
 <script>
 
   export default {
-    name: 'twitter-card',
+    name: 'sentiment-card',
     props: {
       custom: {
         type: String,

@@ -1,12 +1,12 @@
 <template>
-  <div :class = "custom" @click="setTicker">
+  <div :class = "custom" @click="setCompany">
     <!-- <p>{{ticker}} - {{name}} <t> <a style="color:28a745"> {{high}} </a>|<a style="color:dc3545"> {{low}} </a></p> -->
     <div class="">
       <b-row>
         <div class="col-8 card ">
           <b-row>
             <div class="card-body p-2 m-1 ">
-              <h7 style = "color:#42b983; align:right" class="card-title">{{ticker}}</h7>
+              <h6 style = "color:#42b983; align:right" class="card-title">{{ticker}}</h6>
               [
               <a class="text-success">321</a><a style="padding-left:.25em "></a>
               <a style="padding-right:.25em "></a>
@@ -58,10 +58,8 @@ export default {
     }
   },
   methods:{
-    setTicker:function(){
-      console.log("ticker")
+    setCompany:function(){
       this.$store.commit('setTicker', this.ticker)
-      console.log("Called")
     }
   },
   async mounted(){

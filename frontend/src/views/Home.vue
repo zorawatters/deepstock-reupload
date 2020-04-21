@@ -7,11 +7,11 @@
       <main-card title="Toggle" custom ="card shadow col-lg-4 col-md-5 col-sm-12 col-xs-12  p-1 m-2">
         <b-row>
         <toggle-card custom = "bg-warning rounded mb-2 container shadow col-lg- 12 col-md-6" ticker = "AMD" ></toggle-card>
-        <toggle-card custom = "bg-success rounded mb-2 container shadow col-lg- 12 col-md-6" ticker = "AAPL" @click="$store.commit('setTicker', 'AAPL')"></toggle-card>
+        <toggle-card custom = "bg-success rounded mb-2 container shadow col-lg- 12 col-md-6" ticker = "AAPL"></toggle-card>
       </b-row>
       <b-row>
-        <toggle-card custom = "bg-danger rounded mb-2 container shadow col-lg- 12 col-md-6" ticker = "SPLK" @click="$store.commit('setTicker', 'SPLK')"></toggle-card>
-        <toggle-card custom = "bg-info rounded  container shadow col-lg- 12 col-md-6" ticker = "TSLA" @click="$store.commit('setTicker', 'TSLA')"></toggle-card>
+        <toggle-card custom = "bg-danger rounded mb-2 container shadow col-lg- 12 col-md-6" ticker = "SPLK"></toggle-card>
+        <toggle-card custom = "bg-info rounded  container shadow col-lg- 12 col-md-6" ticker = "TSLA"></toggle-card>
       </b-row>
       </main-card>
     </b-row>

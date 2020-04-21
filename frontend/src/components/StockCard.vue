@@ -4,20 +4,15 @@
     :type="type"
     :width="width"
     :height="height"
-    :dataformat="dataFormat"
+    :dataFormat="dataFormat"
     :dataSource="dataSource"
     ></fusioncharts>
+
   </div>
 </template>
 <script>
-const d = [
-  ['2020-04-17 10:05:00', 700],
-  ['2020-04-17 13:25:00', 500],
-  ['2020-04-17 14:30:00', 600],
-  ['2020-04-17 15:30:00', 740]
-]
 
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'stock-card',
@@ -33,7 +28,6 @@ export default {
       width: "100%",
       height: "85%",
       dataFormat: "json",
-      chartData: [],
       dataStore: new FusionCharts.DataStore(),
       schema: [{
         name: "Time",
@@ -42,36 +36,21 @@ export default {
       }, {
         name: "Price",
         type: "number"
-      }]
+      }],
     }
   },
-  async mounted(){
-    this.getIntraday()
-    setInterval(this.getIntraday, 600000)
-  },
-  methods:{
-    getIntraday: async function(){
-      console.log("Getting it for this.ticker")
-      var response = await this.$http.get(this.$backendUrl + '/' + this.ticker + '/intraday')
-      var data = response.data
-      this.chartData = []
 
-      for(var datetime in data){
-        this.chartData.push([datetime, Number(data[datetime][0]['4. close'])])
-
-      }
-    }
-  },
   computed:{
     dataSource(){
-
-      var r =  {
+      this.dataStore.dispose()
+      this.dataStore = new FusionCharts.DataStore()
+      return ({
         chart: {},
         navigator: {
           enabled: 0
         },
         caption: {
-          text: "Intraday movements of " + this.ticker
+           text: "Intraday movements of " + this.ticker
         },
         yaxis: [
           {
@@ -92,32 +71,13 @@ export default {
         //numbersuffix: "K",
         theme: "fusion",
         data: this.dataStore.createDataTable(this.chartData, this.schema)
-      }
-      console.log(r)
-      return r
+      })
     },
-    ...mapState(['ticker'])
-    // ticker:
-    //   {
-    //     console.log("Computer Called")
-    //     return this.$store.getters.getTicker
-    //   }
+    ...mapGetters({
+      ticker:'getTicker',
+      chartData: 'getChartData'
+    })
   },
-
-  created(){
-    this.$store.watch(
-      (state)=>{
-        return this.$store.state.ticker // could also put a Getter here
-      },
-      (newValue, oldValue)=>{
-        //something changed do something
-        console.log(oldValue)
-        console.log(newValue)
-        this.getIntraday()
-      }
-    )
-  },
-
 }
 
 </script>
