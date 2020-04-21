@@ -30,8 +30,8 @@ export default {
   data() {
     return {
       type: "timeseries",
-      width: "550",
-      height: "350",
+      width: "100%",
+      height: "85%",
       dataFormat: "json",
       chartData: [],
       dataStore: new FusionCharts.DataStore(),
