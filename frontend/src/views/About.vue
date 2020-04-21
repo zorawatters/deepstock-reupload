@@ -1,6 +1,6 @@
 <template>
   <div class="about container">
-    <h1>Developers</h1>
+    <h1 class="text-light">Developers</h1>
     <b-row>
       <div class="offset-lg-1"></div>
       <info-card name="Jake Andrus" github = "JakeAndrus" href="https://github.com/JakeAndrus" image = "../assets/imgs/img_avatar1.png" bio = "Talk to me to insert your bio"/>
