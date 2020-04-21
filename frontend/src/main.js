@@ -26,13 +26,12 @@ import './assets/bootstrap-vue.css'
 var store = new Vuex.Store({
   state: {
     companies: ['AMD', 'AAPL', 'TSLA', 'SPLK'],	
-    ticker: "TSLA",
+    ticker: "AMD",
   	stockData: {},
   },
   getters:{
     getTicker: state => {
       return state.ticker
-      //return lodash.cloneDeep(state.ticker)
     },
     getMetadata: state => {
     	if(!state.stockData[state.ticker]){
@@ -56,10 +55,11 @@ var store = new Vuex.Store({
       state.ticker = t
     },
     setChartData(state, payload){
-    	if(!state.stockData[payload.company]){
+      if(!state.stockData[payload.company]){
 				state.stockData[payload.company] = {}
 			}
 			state.stockData[payload.company]['chartData'] = payload.chartData
+      //console.log(state.stockData[payload.company])
     },
     setMetadata(state, payload){
     	if(!state.stockData[payload.company]){
@@ -80,22 +80,27 @@ var store = new Vuex.Store({
   	updateIntraday({commit, state}){
   		var update = () => {
   			var counter = 100
-  			state.companies.forEach(company => {
-					//axios.get(backendUrl + '/' + state.ticker + '/intraday').then(response => {
-						var cd = []
-
-						cd = [['2020-04-17 10:05:00', 400],
-								  ['2020-04-17 13:25:00', counter],
-								  ['2020-04-17 14:30:00', 600],
-								  ['2020-04-17 15:30:00', counter*3]]
-						counter += 100
-						//for(var datetime in response.data){
-						//	cd.push([datetime, Number(response.data[datetime][0]['4. close'])])
-						//}
-						commit('setChartData', {company:company, chartData: cd})
-					//})
-	  		})
-  		}
+        var proms = []
+  			state.companies.forEach(async company => {
+					proms.push(new Promise(async (resolve, reject) => {
+            var c = company
+            //var response = await axios.get(backendUrl + '/' + company + '/intraday')
+            var cd = []
+            cd = cd = [['2020-04-17 10:05:00', 400],
+                  ['2020-04-17 13:25:00', counter],
+                  ['2020-04-17 14:30:00', 600],
+                  ['2020-04-17 15:30:00', counter*2]]
+            counter+=100
+            //for(var datetime in response.data){
+            //  cd.push([datetime, Number(response.data[datetime][0]['4. close'])])
+            //}
+            resolve({company: c, chartData: cd})
+          }))
+				})
+	  		Promise.all(proms).then(values => {
+          values.forEach(value => commit('setChartData', value))
+  		  })
+      }
   		update()
   		setInterval(update, 300000)
 	  		

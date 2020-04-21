@@ -57,6 +57,7 @@ export default {
         logo_url : '',
         website : ''
       },
+      chartData: []
     }
   },
   methods:{
@@ -73,18 +74,30 @@ export default {
       companyInfo: 'getStockData'
     }),
     currentPrice(){
-      var cd = this.companyInfo(this.ticker)['chartData']
-      if(cd){
+      //var cd = this.companyInfo(this.ticker)['chartData']
+      var cd = this.chartData
+      if(cd && cd.length > 0){
         return Number.parseFloat(cd[cd.length-1][1])
       }else{
         return 0
       }
     },
     percentChange(){
-      var cd = this.companyInfo(this.ticker)['chartData']
-      if(cd){
+      //var cd = this.companyInfo(this.ticker)['chartData']
+      var cd = this.chartData
+      if(cd && cd.length > 0){
         var open = Number.parseFloat(cd[0][1])
         return (((this.currentPrice - open) / open))*100
+      }else{
+        return 0
+      }
+    }
+  },
+  watch: {
+    companyInfo: {
+      deep: true,
+      handler(val){
+        this.chartData = val(this.ticker)['chartData']
       }
     }
   }
