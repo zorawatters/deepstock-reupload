@@ -1,7 +1,7 @@
 <template>
     <div class="card shadow col-lg-3 m-1 p-1">
       <!-- <img class="card-img-bottom" v-bind:src="image" v-bind:alt="name" style="width:100%"> -->
-      <img class="card-img-bottom" src="../assets/imgs/img_avatar1.png" v-bind:alt="name" style="width:100%">
+      <img class="card-img-bottom" :src="image" :alt="name" style="width:100%">
         <div class="card-body">
           <h4 class="card-title">{{name}}</h4>
           <p class="card-text">{{bio}}</p>
@@ -48,7 +48,6 @@ export default {
 </script>
 <style scoped>
 .card {
-  /* border: 2px dashed black; */
-  width:200px;
+
 }
 </style>

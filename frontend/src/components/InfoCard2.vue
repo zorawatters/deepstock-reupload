@@ -6,7 +6,7 @@
         <a v-bind:href="href" class="btn btn-primary">{{github}}</a>
       </div>
       <!-- <img class="card-img-bottom" v-bind:src="image" v-bind:alt="name" style="width:100%"> -->
-      <img class="card-img-bottom" src="../assets/imgs/img_avatar1.png" v-bind:alt="name" style="width:100%">
+      <img class="card-img-bottom" :src="image" :alt="name" style="width:100%">
   </div>
 </template>
 <script>
