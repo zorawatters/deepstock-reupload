@@ -44,8 +44,8 @@ def addhist(company):
     if request.method == 'GET':
         obj = collection.find_one({"ticker": company})
         #print(obj['historical'][:10])
-        return json.dumps(obj['historical'], indent=4, sort_keys=True, default=str)
-        #return json.dumps(obj['historical'], default=json_util.default)
+        #return json.dumps(obj['historical'], indent=4, sort_keys=True, default=str)
+        return json.dumps(obj['historical'], default=json_util.default)
 
 
 # adds new company with it's current metadata
@@ -297,6 +297,12 @@ def clear_tweets(ticker):
     collection.update({"ticker" : ticker}, { "$set": {"tweets": []}})
 
     return "cleared tweets for " + ticker
+
+
+@app.route("/<string:company>/tweet_sentiments", methods=['GET'])
+def get_tweets(company):
+    obj = collection.find_one({"ticker": company},{'tweets': 1})
+    return json.dumps(obj['tweets'], default=json_util.default)
 
 
 if os.getenv('environment') == 'dev':

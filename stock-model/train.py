@@ -34,20 +34,22 @@ def _mlflow_log_metrics(metrics, metric_name):
 
 def train_and_evaluate(args):
 	start_time = time()
-	url = 'https://backend-dot-deep-stock-268818.appspot.com/' + args.ticker + '/historicaldata'
+	url = 'http://35.222.54.209:5000/' + args.ticker + '/historicaldata'
+	#url = 'https://backend-dot-deep-stock-268818.appspot.com/' + args.ticker + '/historicaldata'
 	try:
 		hist_data = requests.get(url)
 	except requests.exceptions.RequestException as e:
 		raise SystemExit(e)
 	
 	df = pd.DataFrame(hist_data.json())
-	df.sort_values('date')
+	#df['date'] = df['date'].get('$date')
+	df['date'] = df['date'].map(lambda x: x['$date'])
+	df = df.sort_values('date')
 	#df = pd.read_json('{'+hist_data.json()+'}')
 	#df = pd.read_csv('https://raw.githubusercontent.com/lazyprogrammer/machine_learning_examples/master/tf2.0/sbux.csv')
 	df['PrevClose'] = df['Close'].shift(1)
 
 	df['Return'] = (df['Close'] - df['PrevClose']) / df['PrevClose']
-	print(df.head())
 	input_data = df[['Open', 'High', 'Low', 'Close', 'Volume']].values
 	targets = df['Return'].values
 	print(input_data.shape)
