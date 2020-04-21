@@ -32,4 +32,5 @@ frontend/src/variables.js
 .env
 mlruns/
 mlflow/
+.DS_Store
 

@@ -1,40 +1,33 @@
 <template>
-<div :class = "custom">
-  <fusioncharts
-  :type="type"
-  :width="width"
-  :height="height"
-  :dataformat="dataFormat"
-  :dataSource="dataSource"
-  ></fusioncharts>
-</div>
+  <div :class = "custom">
+    <fusioncharts
+    :type="type"
+    :width="width"
+    :height="height"
+    :dataFormat="dataFormat"
+    :dataSource="dataSource"
+    ></fusioncharts>
+
+  </div>
 </template>
 <script>
-const d = [
-  ['2020-04-17 10:05:00', 700],
-  ['2020-04-17 13:25:00', 500],
-  ['2020-04-17 14:30:00', 600],
-  ['2020-04-17 15:30:00', 740]
-]
+
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'stock-card',
   props: {
     custom: {
       type: String,
       default: ''
-    },
-    ticker: {
-      type: String,
-      default: 'TSLA'
     }
   },
   data() {
     return {
       type: "timeseries",
-      width: "550",
-      height: "350",
+      width: "100%",
+      height: "85%",
       dataFormat: "json",
-      chartData: [],
       dataStore: new FusionCharts.DataStore(),
       schema: [{
         name: "Time",
@@ -43,48 +36,34 @@ export default {
       }, {
         name: "Price",
         type: "number"
-      }]
+      }],
     }
   },
-  async mounted(){
-    this.getIntraday()
-    setInterval(this.getIntraday, 600000)
-  },
-  methods:{
-    getIntraday: async function(){
-      var response = await this.$http.get(this.$backendUrl + '/' + this.ticker + '/intraday')
-      var data = response.data
-      this.chartData = []
 
-      for(var datetime in data){
-        this.chartData.push([datetime, Number(data[datetime][0]['4. close'])])
-
-      }
-    }
-  },
   computed:{
-    dataSource: function(){
-
-      var r =  {
+    dataSource(){
+      this.dataStore.dispose()
+      this.dataStore = new FusionCharts.DataStore()
+      return ({
         chart: {},
         navigator: {
           enabled: 0
         },
         caption: {
-          text: "Intraday movements of " + this.ticker
+           text: "Intraday movements of " + this.ticker
         },
         yaxis: [
           {
             plot: [
               {
-                  value: "Price",
-                  //type: 'line',
-                  connectnulldata: true,
-                  style: {
-                    "plot.null": {
-                      "stroke-dasharray": "none",
-                    }
+                value: "Price",
+                //type: 'line',
+                connectnulldata: true,
+                style: {
+                  "plot.null": {
+                    "stroke-dasharray": "none",
                   }
+                }
               }
             ]
           }
@@ -92,16 +71,13 @@ export default {
         //numbersuffix: "K",
         theme: "fusion",
         data: this.dataStore.createDataTable(this.chartData, this.schema)
-      }
-      console.log(r)
-      return r
-    }
+      })
+    },
+    ...mapGetters({
+      ticker:'getTicker',
+      chartData: 'getChartData'
+    })
   },
-  watch:{
-  	ticker: function(newVal){
-  		this.getIntraday()
-  	}
-  }
 }
 
 </script>
