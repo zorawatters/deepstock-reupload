@@ -5,10 +5,10 @@
         <stock-card custom=""></stock-card>
       </main-card>
       <main-card title="Toggle" custom ="card shadow col-lg-4 col-md-4 col-sm-10 offset-sm-1 p-1">
-        <toggle-card custom = "bg-warning rounded m-2" ticker = "AMD" ></toggle-card>
-        <toggle-card custom = "bg-success rounded m-2" ticker = "AAPL" @click="$store.commit('setTicker', 'AAPL')"></toggle-card>
-        <toggle-card custom = "bg-danger rounded m-2" ticker = "SPLK" @click="$store.commit('setTicker', 'SPLK')"></toggle-card>
-        <toggle-card custom = "bg-info rounded m-2" ticker = "TSLA" @click="$store.commit('setTicker', 'TSLA')"></toggle-card>
+        <toggle-card custom = "bg-warning rounded m-1 container shadow" ticker = "AMD" ></toggle-card>
+        <toggle-card custom = "bg-success rounded m-1 container shadow" ticker = "AAPL" @click="$store.commit('setTicker', 'AAPL')"></toggle-card>
+        <toggle-card custom = "bg-danger rounded m-1 container shadow" ticker = "SPLK" @click="$store.commit('setTicker', 'SPLK')"></toggle-card>
+        <toggle-card custom = "bg-info rounded m-1 container shadow" ticker = "TSLA" @click="$store.commit('setTicker', 'TSLA')"></toggle-card>
       </main-card>
     </b-row>
     <b-row class="p-3 mb-5">
