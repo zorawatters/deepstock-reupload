@@ -17,5 +17,5 @@ RUN echo "environment=\"prod\"" > ./.env
 
 EXPOSE 8080
 
-CMD ["gunicorn", "main:app", "-b", ":8080", "--timeout", "300", "--workers", "5"]
+CMD ["gunicorn", "main:app", "-b", ":8080", "--timeout", "120", "--workers", "10"]
 

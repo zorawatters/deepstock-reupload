@@ -11,7 +11,7 @@ def build_model(T, D):
 	x = LSTM(15)(x)
 	x = Dense(1, activation='sigmoid')(x)
 	model = Model(i, x)
-	model.compile(loss='binary_crossentropy', optimizer=Adam(lr=.001), metrics=['accuracy'])
+	model.compile(loss='mean_squared_error', optimizer=Adam(lr=.001), metrics=['accuracy'])
 
 	return model
 

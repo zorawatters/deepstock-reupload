@@ -10,6 +10,7 @@ from tensorflow.python.saved_model import tag_constants
 import mlflow.tensorflow
 from builtins import int
 from time import time
+from datetime import datetime
 import os
 import subprocess
 import logging
@@ -34,30 +35,42 @@ def _mlflow_log_metrics(metrics, metric_name):
 
 def train_and_evaluate(args):
 	start_time = time()
-	url = 'http://35.222.54.209:5000/' + args.ticker + '/historicaldata'
-	#url = 'https://backend-dot-deep-stock-268818.appspot.com/' + args.ticker + '/historicaldata'
+	url = 'http://35.222.54.209:5000/' + args.ticker
+	#url = 'https://backend-dot-deep-stock-268818.appspot.com/' + args.ticker
 	try:
-		hist_data = requests.get(url)
+		hist_data = requests.get(url + '/historicaldata')
+		twit_data = requests.get(url + '/tweet_sentiments')
 	except requests.exceptions.RequestException as e:
 		raise SystemExit(e)
-	
-	df = pd.DataFrame(hist_data.json())
-	#df['date'] = df['date'].get('$date')
-	df['date'] = df['date'].map(lambda x: x['$date'])
-	df = df.sort_values('date')
-	#df = pd.read_json('{'+hist_data.json()+'}')
-	#df = pd.read_csv('https://raw.githubusercontent.com/lazyprogrammer/machine_learning_examples/master/tf2.0/sbux.csv')
-	df['PrevClose'] = df['Close'].shift(1)
 
-	df['Return'] = (df['Close'] - df['PrevClose']) / df['PrevClose']
-	input_data = df[['Open', 'High', 'Low', 'Close', 'Volume']].values
-	targets = df['Return'].values
+	twit_data = twit_data.json()
+	clean_twit = []
+	for twit in twit_data:
+		clean_twit.append({
+			'date': (datetime.timestamp(datetime.strptime(twit['tweets']['date'], "%Y-%m-%d")))/100,
+			'sent': twit['tweets']['day_sentiment']
+		})
+	
+	hist_data = hist_data.json()
+	df_hist = pd.DataFrame(hist_data)
+	df_hist['date'] = df_hist['date'].map(lambda x: x['$date']/100000)
+	df_hist = df_hist.sort_values('date')
+
+	df_twit = pd.DataFrame(clean_twit)
+	df = pd.merge(df_hist, df_twit, on=['date'], how='left')
+	df['sent'] = df['sent'].fillna(0)
+
+	df['PrevWeekClose'] = df['Close'].shift(7)
+
+	df['WeekReturn'] = (df['Close'] - df['PrevWeekClose']) / df['PrevWeekClose']
+	input_data = df[['Open', 'High', 'Low', 'Close', 'sent']].values
+	targets = df['WeekReturn'].values
 	print(input_data.shape)
-	T = 10
+	T = 7
 	D = input_data.shape[1]
 	N = len(input_data) - T
 
-	Ntrain = len(input_data) * 5 // 6
+	Ntrain = len(input_data) * 7 // 8
 	scaler = StandardScaler()
 	scaler.fit(input_data[:Ntrain + T - 1])
 	input_data = scaler.transform(input_data)
@@ -67,7 +80,8 @@ def train_and_evaluate(args):
 
 	for t in range(Ntrain):
 		x_train[t, :, :] = input_data[t:t+T]
-		y_train[t] = (targets[t+T] > 0)
+		y_train[t] = targets[t+T]
+		#y_train[t] = (targets[t+T] > 0)
 
 	x_test = np.zeros((N - Ntrain, T, D))
 	y_test = np.zeros(N - Ntrain)
@@ -77,7 +91,8 @@ def train_and_evaluate(args):
 	  # t counts from Ntrain...N
 	  t = u + Ntrain
 	  x_test[u, :, :] = input_data[t:t+T]
-	  y_test[u] = (targets[t+T] > 0)
+	  y_test[u] = targets[t+T]
+	  #y_test[u] = (targets[t+T] > 0)
 
 	model = keras_model.build_model(T, D)
 	print(model.summary())
