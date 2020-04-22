@@ -68,6 +68,9 @@ var store = new Vuex.Store({
         })
       }
       return result
+    },
+    getFundamentals: (state, getters) => {
+      return (getters.getStockData(getters.getTicker)['fundamentals'])
     }
   },
   mutations:{
@@ -79,7 +82,6 @@ var store = new Vuex.Store({
 				state.stockData[payload.company] = {}
 			}
 			state.stockData[payload.company]['chartData'] = payload.chartData
-      //console.log(state.stockData[payload.company])
     },
     setMetadata(state, payload){
     	if(!state.stockData[payload.company]){
@@ -98,6 +100,12 @@ var store = new Vuex.Store({
         state.stockData[payload.company] = {}
       }
       state.stockData[payload.company]['tweets'] = payload.tweets
+    },
+    setFundamentals(state, payload){
+      if(!state.stockData[payload.company]){
+        state.stockData[payload.company] = {}
+      }
+      state.stockData[payload.company]['fundamentals'] = payload.fundamentals
     },
     init(state){
     	state.companies.forEach(company => {
@@ -155,8 +163,14 @@ var store = new Vuex.Store({
     updateTweets({commit, state}){
       state.companies.forEach(company => {
         axios.get(backendUrl + '/' + company + '/recentdays').then(response => {
-          console.log(response)
           commit('setTweets', {company: company, tweets: response.data})
+        })
+      })
+    },
+    updateFundamentals({commit, state}){
+      state.companies.forEach(company => {
+        axios.get(backendUrl + '/' + company + '/fundamentals').then(response => {
+          commit('setFundamentals', {company: company, fundamentals: response.data})
         })
       })
     }
@@ -169,6 +183,7 @@ store.dispatch('updateIntraday')
 store.dispatch('updateMetadata')
 store.dispatch('updatePredictions')
 store.dispatch('updateTweets')
+store.dispatch('updateFundamentals')
 
 new Vue({
   router,
