@@ -3,10 +3,10 @@
     <!-- <p>{{ticker}} - {{name}} <t> <a style="color:28a745"> {{high}} </a>|<a style="color:dc3545"> {{low}} </a></p> -->
     <div class="">
       <b-row>
-        <div class="col-8 card ">
+        <div class="col-8 card shadow opacity:40%">
           <b-row>
-            <div class="card-body p-2 m-1 ">
-              <h6 style = "color:#42b983; align:right" class="card-title">{{ticker}}</h6>
+            <div class="card-footer ">
+              <a style = "color:#42b983; align:right;" class="card-title"><b>{{ticker}}</b></a><br>
               [
               <a class="text-success">${{currentPrice.toFixed(2)}}</a><a style="padding-left:.25em "></a>
               <a style="padding-right:.25em "></a>
@@ -16,17 +16,22 @@
               <a style="padding-left:.25em "></a>
               <a class="text-danger">{{percentChange.toFixed(2)}}%</a>
               ]
+              <br>
+              <a class="text-muted">
+              {{metadata.shortName}}
+              some sample text here
+            </a>
               <!-- <p class="card-text">INSERT TWEET HERE</p>
               <a href="#" class="btn btn-primary">Link to tweet/bio?</a> -->
             </div>
             <div class="card-footer text-muted">
-              {{metadata.shortName}}
+
             </div>
 
           </b-row>
         </div>
-        <div class="col-4">
-          <img :src="metadata.logo_url" width = "60" height = "60" class="rounded-circle">
+        <div class="col-3" style="align-items: center;">
+          <img :src="metadata.logo_url" width = "80" height = "80" class="rounded-circle pt-2 pl-2 shadow">
         </div>
       </b-row>
     </div>

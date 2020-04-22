@@ -1,8 +1,6 @@
 <template>
   <div :class="custom">
-    <div class="card-header ">
-        <h1>{{title}}</h1>
-      </div>
+
       <div class="card-body p-1">
       <slot></slot>
     </div>

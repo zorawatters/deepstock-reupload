@@ -69,7 +69,7 @@ export default {
           }
         ],
         //numbersuffix: "K",
-        theme: "fusion",
+        theme: "candy",
         data: this.dataStore.createDataTable(this.chartData, this.schema)
       })
     },
