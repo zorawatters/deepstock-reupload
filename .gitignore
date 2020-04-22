@@ -37,3 +37,5 @@ mlruns/
 mlflow/
 .DS_Store
 
+logs/
+
