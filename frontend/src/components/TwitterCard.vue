@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="card text-center">
-
       <div class="card-body">
         <h5 class="card-title">INSERT TITLE HERE</h5>
         <p class="card-text">INSERT TWEET HERE</p>

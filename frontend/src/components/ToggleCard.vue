@@ -30,8 +30,8 @@
 
           </b-row>
         </div>
-        <div class="col-3" style="align-items: center;">
-          <img :src="metadata.logo_url" width = "80" height = "80" class="rounded-circle pt-2 pl-2 shadow">
+        <div class="col-3 pt-2 pl-4" style="align-items: center;">
+          <img :src="metadata.logo_url" width = "80" height = "80" class="rounded-circle shadow">
         </div>
       </b-row>
     </div>
