@@ -272,6 +272,19 @@ def clear_tweets(ticker):
 
     return "cleared tweets for " + ticker
 
+# get last 7 days sentiment 
+@app.route('/<string:company>/recentdays', methods=['GET'])
+def get_recent_sentiment(company):
+    tweets_array = collection.find_one({"ticker" : company})
+    recent_sentiment = tweets_array["tweets"]
+
+    def get_date_string(elem):
+        return int("".join(elem['date'].split('-')))
+
+    sorted_recent_sentiment = sorted(recent_sentiment, key = get_date_string, reverse = True)
+
+    return json.dumps(sorted_recent_sentiment[:7])
+
 
 if os.getenv('environment') == 'dev':
     app.run(host='0.0.0.0')
