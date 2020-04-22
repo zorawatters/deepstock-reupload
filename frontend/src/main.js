@@ -124,21 +124,15 @@ var store = new Vuex.Store({
   actions:{
   	updateIntraday({commit, state}){
   		var update = () => {
-  			var counter = 100
         var proms = []
   			state.companies.forEach(async company => {
 					proms.push(new Promise(async (resolve, reject) => {
             var c = company
-            //var response = await axios.get(backendUrl + '/' + company + '/intraday')
+            var response = await axios.get(backendUrl + '/' + company + '/intraday')
             var cd = []
-            cd = cd = [['2020-04-17 10:05:00', 400],
-                  ['2020-04-17 13:25:00', counter],
-                  ['2020-04-17 14:30:00', 600],
-                  ['2020-04-17 15:30:00', counter*2]]
-            counter+=100
-            //for(var datetime in response.data){
-            //  cd.push([datetime, Number(response.data[datetime][0]['4. close'])])
-            //}
+            for(var datetime in response.data){
+              cd.push([datetime, Number(response.data[datetime][0]['4. close'])])
+            }
             resolve({company: c, chartData: cd})
           }))
 				})
