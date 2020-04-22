@@ -370,7 +370,7 @@ def make_pred(company):
     instances = ({'input_1':X[0].tolist()})
 
     credentials = service_account.Credentials.from_service_account_file(
-        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        filename=os.getenv('GOOGLE_APPLICATION_CREDENTIALS'),
         scopes=['https://www.googleapis.com/auth/cloud-platform']
     )
     
