@@ -35,7 +35,7 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 @app.route('/message')
 def get_message():
     return 'Hello Stonks'
-"""
+
 # adds historicaldata to ticker and retrieves all historical data from db
 @app.route("/<string:company>/historicaldata", methods=['PUT' , 'GET'])
 def addhist(company):
@@ -255,6 +255,7 @@ def get_documents():
 
     return json.dumps(response)
 
+"""
 @app.route('/tweepy/<string:ticker>', methods=['GET'])
 def get_tweepy(ticker):
     api = TwitterClient()
@@ -298,7 +299,7 @@ def get_tweepy(ticker):
         collection.update({"ticker" : ticker, "tweets.date": tweet_date}, {'$set': {'tweets.$.day_sentiment': updated_avg_day_sentiment}} )
 
     return json.dumps(tweets, 200)
-
+"""
 # this deletes all tweets in database for a specified company
 @app.route('/cleartweets/<string:ticker>', methods=['GET'])
 def clear_tweets(ticker):
@@ -380,7 +381,7 @@ def make_pred(company):
     if 'error' in response:
         raise RuntimeError(response['error'])
     return json.dumps(response['predictions'])
-"""
+
 
 if os.getenv('environment') == 'dev':
     app.run(host='0.0.0.0')
