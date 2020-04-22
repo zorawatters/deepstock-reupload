@@ -10,8 +10,7 @@ import json
 from bson import json_util
 import tweepy
 
-from twitter import TwitterClient
-from flask_jsonpify import jsonpify
+#from twitter import TwitterClient
 from google.oauth2 import service_account
 from googleapiclient import discovery
 import pandas as pd
