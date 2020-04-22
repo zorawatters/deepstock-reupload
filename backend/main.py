@@ -8,11 +8,18 @@ import yfinance as yf
 from datetime import tzinfo, timedelta, datetime
 from alpha_vantage.timeseries import TimeSeries
 import json
+from bson import json_util
 import tweepy
 from tweepy.parsers import JSONParser
 from tweepy.streaming import StreamListener
 from twitter import TwitterClient
 from flask_jsonpify import jsonpify
+from google.oauth2 import service_account
+from googleapiclient import discovery
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+import numpy as np
+
 from dotenv import load_dotenv
 load_dotenv()
 import os
@@ -30,7 +37,7 @@ CORS(app, resources={r'/*': {'origins': '*'}})
 
 @app.route('/message')
 def get_message():
-  return 'Hello Stonks'
+    return 'Hello Stonks'
 
 # adds historicaldata to ticker and retrieves all historical data from db
 @app.route("/<string:company>/historicaldata", methods=['PUT' , 'GET'])
@@ -38,10 +45,12 @@ def addhist(company):
     if request.method == 'PUT': ## NEDS UPDATING
         new_hist = request.get_json()
         collection.update({"ticker" : company}, {'$push': {'historical': new_hist}})
-        return ("Historical data added to: " + company)
+        return("Historical data added to: " + company)
     if request.method == 'GET':
         obj = collection.find_one({"ticker": company})
-        return obj['historical']
+        #print(obj['historical'][:10])
+        #return json.dumps(obj['historical'], indent=4, sort_keys=True, default=str)
+        return json.dumps(obj['historical'], default=json_util.default)
 
 
 # adds new company with it's current metadata
@@ -58,17 +67,17 @@ def getMetadata(company):
     return obj['metadata']
 
 
-@app.route("/<string:company>/prediction", methods=['GET']) # MAYBE CHANGE RETURN FROM LIST TO SOMETHING ELSE
+@app.route("/<string:company>/two_week_hist", methods=['GET']) # MAYBE CHANGE RETURN FROM LIST TO SOMETHING ELSE
 def get_2weekhist(company):
     comp = yf.Ticker(company)
     hist = comp.history(period="14d")
     hist2 = hist.to_dict('index')
     pred = []
     for i in hist2:
-      tmp = {'date' : i}
-      tmp.update(hist2[i])
-      pred.append(tmp)
-    return pred
+        tmp = {'date' : i}
+        tmp.update(hist2[i])
+        pred.append(tmp)
+    return json.dumps(pred, default=json_util.default)
 
 # Adds the metadata to database base on ticker
 def addMetadata(company):
@@ -140,6 +149,7 @@ def addfundamentals(company):
         return fun[funSize]
 
 # def for trying to add object in fundamentals, as some don't exist in other tickers
+
 def tryObj(name , jsonY, data):
     try:
         data.update({name : jsonY[name]})
@@ -235,7 +245,6 @@ def get_intraday(company):
 
     return json.dumps(daily_data)
 
-
 @app.route('/users/display_data')
 def get_documents():
 
@@ -313,6 +322,67 @@ def get_recent_sentiment(company):
 
     return json.dumps(sorted_recent_sentiment[:7])
 
+
+@app.route("/<string:company>/tweet_sentiments", methods=['GET'])
+def get_tweets(company):
+    obj = collection.aggregate([
+        {'$match': {'ticker': company}},
+        {'$unwind': '$tweets'},
+        {'$project': {'tweets.day_sentiment': 1, 'tweets.date': 1}}
+    ])
+    res = []
+    for entry in obj:
+        res.append(entry)
+    #obj = collection.find_one({"ticker": company},{'tweets': {$elemMatch: {}}})
+    return json.dumps(res, default=json_util.default)
+
+@app.route('/<string:company>/make_prediction', methods=['GET'])
+def make_pred(company):
+    hist_data = get_2weekhist(company)
+    hist_data = json.loads(hist_data)
+    #this should be changed to just get the prev week, eventually
+    twit_data = get_tweets(company)
+    twit_data = json.loads(twit_data)
+    clean_twit = []
+    for twit in twit_data:
+        clean_twit.append({
+            'date': (datetime.timestamp(datetime.strptime(twit['tweets']['date'], "%Y-%m-%d")))/100,
+            'sent': twit['tweets']['day_sentiment']
+        })
+
+    df_hist = pd.DataFrame(hist_data)
+    df_hist['date'] = df_hist['date'].map(lambda x: x['$date']/100000)
+
+    df_twit = pd.DataFrame(clean_twit)
+    df = pd.merge(df_hist, df_twit, on=['date'], how='left')
+    df['sent'] = df['sent'].fillna(0)
+    df = df.sort_values('date')
+    input_data = (df[['Open', 'High', 'Low', 'Close', 'sent']].values)
+    
+    T = 7
+    D = input_data.shape[1]
+    
+    scaler = StandardScaler()
+    scaler.fit(input_data[:T])
+    input_data = scaler.transform(input_data)
+    X = np.zeros((1, T, D))
+    X[0, :, :] = input_data[:T]
+
+    instances = ({'input_1':X[0].tolist()})
+
+    credentials = service_account.Credentials.from_service_account_file(
+        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        scopes=['https://www.googleapis.com/auth/cloud-platform']
+    )
+    
+    service = discovery.build('ml', 'v1', credentials=credentials)
+    response = service.projects().predict(
+       name= 'projects/{}/models/{}'.format('deep-stock-268818', company),
+        body={'instances': instances}
+    ).execute()
+    if 'error' in response:
+        raise RuntimeError(response['error'])
+    return json.dumps(response['predictions'])
 
 if os.getenv('environment') == 'dev':
     app.run(host='0.0.0.0')
