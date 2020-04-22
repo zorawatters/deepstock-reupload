@@ -384,6 +384,7 @@ def make_pred(company):
         raise RuntimeError(response['error'])
     return json.dumps(response['predictions'])
 
+
 if os.getenv('environment') == 'dev':
     app.run(host='0.0.0.0')
 elif __name__ == '__main__':
