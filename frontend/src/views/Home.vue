@@ -14,6 +14,8 @@
     <b-row class="p-3 mb-5">
       <main-card title="Twitter Card" custom ="card shadow col-lg-5 col-md-6 col-sm-6 p-1 offset-lg-1"><twitter-card custom = "bg-secondary"></twitter-card></main-card>
       <main-card title="Sentiment Card" custom ="card shadow col-lg-5 col-md-6 col-sm-6 p-1 offset-lg-1"><sentiment-card custom = "bg-secondary"></sentiment-card></main-card>
+      <main-card title="Company Card" custom ="card shadow col-lg-5 col-md-6 col-sm-6 p-1 offset-lg-1"><company-card custom = "bg-secondary" ticker = "TSLA" ></company-card></main-card>
+
 
     </b-row>
   </div>
@@ -26,7 +28,7 @@ import StockCard from '@/components/StockCard.vue'
 import TwitterCard from '@/components/TwitterCard.vue'
 import ToggleCard from '@/components/ToggleCard.vue'
 import SentimentCard from '@/components/SentimentCard.vue'
-
+import CompanyCard from '@/components/CompanyCard.vue'
 export default {
   name: 'Home',
   components: {
@@ -34,7 +36,8 @@ export default {
     'stock-card': StockCard,
     'twitter-card': TwitterCard,
     'toggle-card': ToggleCard,
-    'sentiment-card': SentimentCard
+    'sentiment-card': SentimentCard,
+    'company-card': CompanyCard
   },
   data(){
     return {

@@ -13,7 +13,6 @@ from tweepy.parsers import JSONParser
 from tweepy.streaming import StreamListener
 from twitter import TwitterClient
 from flask_jsonpify import jsonpify
-
 from dotenv import load_dotenv
 load_dotenv()
 import os
@@ -94,47 +93,53 @@ def addMetadata(company):
     data = tryObj('longName', jsonY, data)
     collection.update({"ticker" : company}, {'$set': {'metadata': data}}) #for now test5 but change later
 
-# route to add Fundamentals with current timestamp in NY
-@app.route("/<string:company>/Fundamentals", methods=['PUT'])
-def addFundamentals(company):
-    comp = yf.Ticker(company)
-    jsonY = comp.info
-    td = datetime.now()
-    td = td - timedelta(hours=5)
-    data = {'date' : td}
-    data = tryObj('sharesShort', jsonY, data)
-    data = (tryObj('trailingPE', jsonY, data))
-    data = (tryObj('trailingEps', jsonY, data))
-    data = (tryObj('enterpriseToRevenue', jsonY, data))
-    data = (tryObj('fiftyDayAverage', jsonY, data))
-    data = (tryObj('averageDailyVolume10Day', jsonY, data))
-    data = (tryObj('bookValue', jsonY, data))
-    data = (tryObj('volume', jsonY, data))
-    data = (tryObj('SandP52WeekChange', jsonY, data))
-    data = (tryObj('fiftyTwoWeekHigh', jsonY, data))
-    data = (tryObj('netIncomeToCommon', jsonY, data))
-    data = (tryObj('averageVolume10days', jsonY, data))
-    data = (tryObj('regularMarketVolume', jsonY, data))
-    data = (tryObj('earningsQuarterlyGrowth', jsonY, data))
-    data = (tryObj('52WeekChange', jsonY, data))
-    data = (tryObj('sharesShortPriorMonth', jsonY, data))
-    data = (tryObj('heldPercentInsiders', jsonY, data))
-    data = (tryObj('marketCap', jsonY, data))
-    data = (tryObj('beta', jsonY, data))
-    data = (tryObj('priceToSalesTrailing12Months', jsonY, data))
-    data = (tryObj('shortRatio', jsonY, data))
-    data = (tryObj('averageVolume', jsonY, data))
-    data = (tryObj('shortPercentOfFloat', jsonY, data))
-    data = (tryObj('fiftyTwoWeekLow', jsonY, data))
-    data = (tryObj('forwardPE', jsonY, data))
-    data = (tryObj('profitMargins', jsonY, data))
-    data = (tryObj('heldPercentInstitutions', jsonY, data))
-    data = (tryObj('forwardEps', jsonY, data))
-    data = (tryObj('twoHundredDayAverage', jsonY, data))
-    collection.update({"ticker" : company}, {'$push': {'Fundamentals': data}})
-    return "Fundamentals added to: " +  company +  " for date: " + str(td)
+# route to add fundamentals with current timestamp in NY
+@app.route("/<string:company>/fundamentals", methods=['PUT' , 'GET'])
+def addfundamentals(company):
+    if request.method == 'PUT':
+        comp = yf.Ticker(company)
+        jsonY = comp.info
+        td = datetime.now()
+        td = td - timedelta(hours=5)
+        data = {'date' : td}
+        data = tryObj('sharesShort', jsonY, data)
+        data = (tryObj('trailingPE', jsonY, data))
+        data = (tryObj('trailingEps', jsonY, data))
+        data = (tryObj('enterpriseToRevenue', jsonY, data))
+        data = (tryObj('fiftyDayAverage', jsonY, data))
+        data = (tryObj('averageDailyVolume10Day', jsonY, data))
+        data = (tryObj('bookValue', jsonY, data))
+        data = (tryObj('volume', jsonY, data))
+        data = (tryObj('SandP52WeekChange', jsonY, data))
+        data = (tryObj('fiftyTwoWeekHigh', jsonY, data))
+        data = (tryObj('netIncomeToCommon', jsonY, data))
+        data = (tryObj('averageVolume10days', jsonY, data))
+        data = (tryObj('regularMarketVolume', jsonY, data))
+        data = (tryObj('earningsQuarterlyGrowth', jsonY, data))
+        data = (tryObj('52WeekChange', jsonY, data))
+        data = (tryObj('sharesShortPriorMonth', jsonY, data))
+        data = (tryObj('heldPercentInsiders', jsonY, data))
+        data = (tryObj('marketCap', jsonY, data))
+        data = (tryObj('beta', jsonY, data))
+        data = (tryObj('priceToSalesTrailing12Months', jsonY, data))
+        data = (tryObj('shortRatio', jsonY, data))
+        data = (tryObj('averageVolume', jsonY, data))
+        data = (tryObj('shortPercentOfFloat', jsonY, data))
+        data = (tryObj('fiftyTwoWeekLow', jsonY, data))
+        data = (tryObj('forwardPE', jsonY, data))
+        data = (tryObj('profitMargins', jsonY, data))
+        data = (tryObj('heldPercentInstitutions', jsonY, data))
+        data = (tryObj('forwardEps', jsonY, data))
+        data = (tryObj('twoHundredDayAverage', jsonY, data))
+        collection.update({"ticker" : company}, {'$push': {'fundamentals': data}})
+        return "fundamentals added to: " +  company +  " for date: " + str(td)
+    if request.method == 'GET':
+        obj = collection.find_one({'ticker' : company})
+        fun = obj['fundamentals']
+        funSize = len(obj['fundamentals']) - 1
+        return fun[funSize]
 
-# def for trying to add object in Fundamentals, as some don't exist in other tickers
+# def for trying to add object in fundamentals, as some don't exist in other tickers
 def tryObj(name , jsonY, data):
     try:
         data.update({name : jsonY[name]})
