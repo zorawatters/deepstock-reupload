@@ -13,8 +13,6 @@ from tweepy.parsers import JSONParser
 from tweepy.streaming import StreamListener
 from twitter import TwitterClient
 from flask_jsonpify import jsonpify
-import datetime
-
 from dotenv import load_dotenv
 load_dotenv()
 import os
@@ -22,6 +20,7 @@ import os
 app = Flask(__name__)
 
 CONNECTION_STRING = "mongodb://deep-stock-cu:deep2020stock@deep-stock-cluster-shard-00-00-bwk5a.gcp.mongodb.net:27017,deep-stock-cluster-shard-00-01-bwk5a.gcp.mongodb.net:27017,deep-stock-cluster-shard-00-02-bwk5a.gcp.mongodb.net:27017/test?ssl=true&replicaSet=deep-stock-cluster-shard-0&authSource=admin&retryWrites=true&w=majority"
+
 client = pymongo.MongoClient(CONNECTION_STRING)
 db = client.get_database('deep-stock')
 collection = db['companies']
@@ -53,6 +52,24 @@ def addcompany():
     addMetadata(companyObj['ticker'])
     addhist2year(companyObj['ticker'])
 
+@app.route("/<string:company>/metadata", methods=['GET'])
+def getMetadata(company):
+    obj = collection.find_one({'ticker' : company})
+    return obj['metadata']
+
+
+@app.route("/<string:company>/prediction", methods=['GET']) # MAYBE CHANGE RETURN FROM LIST TO SOMETHING ELSE
+def get_2weekhist(company):
+    comp = yf.Ticker(company)
+    hist = comp.history(period="14d")
+    hist2 = hist.to_dict('index')
+    pred = []
+    for i in hist2:
+      tmp = {'date' : i}
+      tmp.update(hist2[i])
+      pred.append(tmp)
+    return pred
+
 # Adds the metadata to database base on ticker
 def addMetadata(company):
     comp = yf.Ticker(company)
@@ -76,47 +93,53 @@ def addMetadata(company):
     data = tryObj('longName', jsonY, data)
     collection.update({"ticker" : company}, {'$set': {'metadata': data}}) #for now test5 but change later
 
-# route to add Fundamentals with current timestamp in NY
-@app.route("/<string:company>/Fundamentals", methods=['PUT'])
-def addFundamentals(company):
-    comp = yf.Ticker(company)
-    jsonY = comp.info
-    td = datetime.now()
-    td = td - timedelta(hours=5)
-    data = {'date' : td}
-    data = tryObj('sharesShort', jsonY, data)
-    data = (tryObj('trailingPE', jsonY, data))
-    data = (tryObj('trailingEps', jsonY, data))
-    data = (tryObj('enterpriseToRevenue', jsonY, data))
-    data = (tryObj('fiftyDayAverage', jsonY, data))
-    data = (tryObj('averageDailyVolume10Day', jsonY, data))
-    data = (tryObj('bookValue', jsonY, data))
-    data = (tryObj('volume', jsonY, data))
-    data = (tryObj('SandP52WeekChange', jsonY, data))
-    data = (tryObj('fiftyTwoWeekHigh', jsonY, data))
-    data = (tryObj('netIncomeToCommon', jsonY, data))
-    data = (tryObj('averageVolume10days', jsonY, data))
-    data = (tryObj('regularMarketVolume', jsonY, data))
-    data = (tryObj('earningsQuarterlyGrowth', jsonY, data))
-    data = (tryObj('52WeekChange', jsonY, data))
-    data = (tryObj('sharesShortPriorMonth', jsonY, data))
-    data = (tryObj('heldPercentInsiders', jsonY, data))
-    data = (tryObj('marketCap', jsonY, data))
-    data = (tryObj('beta', jsonY, data))
-    data = (tryObj('priceToSalesTrailing12Months', jsonY, data))
-    data = (tryObj('shortRatio', jsonY, data))
-    data = (tryObj('averageVolume', jsonY, data))
-    data = (tryObj('shortPercentOfFloat', jsonY, data))
-    data = (tryObj('fiftyTwoWeekLow', jsonY, data))
-    data = (tryObj('forwardPE', jsonY, data))
-    data = (tryObj('profitMargins', jsonY, data))
-    data = (tryObj('heldPercentInstitutions', jsonY, data))
-    data = (tryObj('forwardEps', jsonY, data))
-    data = (tryObj('twoHundredDayAverage', jsonY, data))
-    collection.update({"ticker" : company}, {'$push': {'Fundamentals': data}})
-    return "Fundamentals added to: " +  comapny +  " for date: " + str(td)
+# route to add fundamentals with current timestamp in NY
+@app.route("/<string:company>/fundamentals", methods=['PUT' , 'GET'])
+def addfundamentals(company):
+    if request.method == 'PUT':
+        comp = yf.Ticker(company)
+        jsonY = comp.info
+        td = datetime.now()
+        td = td - timedelta(hours=5)
+        data = {'date' : td}
+        data = tryObj('sharesShort', jsonY, data)
+        data = (tryObj('trailingPE', jsonY, data))
+        data = (tryObj('trailingEps', jsonY, data))
+        data = (tryObj('enterpriseToRevenue', jsonY, data))
+        data = (tryObj('fiftyDayAverage', jsonY, data))
+        data = (tryObj('averageDailyVolume10Day', jsonY, data))
+        data = (tryObj('bookValue', jsonY, data))
+        data = (tryObj('volume', jsonY, data))
+        data = (tryObj('SandP52WeekChange', jsonY, data))
+        data = (tryObj('fiftyTwoWeekHigh', jsonY, data))
+        data = (tryObj('netIncomeToCommon', jsonY, data))
+        data = (tryObj('averageVolume10days', jsonY, data))
+        data = (tryObj('regularMarketVolume', jsonY, data))
+        data = (tryObj('earningsQuarterlyGrowth', jsonY, data))
+        data = (tryObj('52WeekChange', jsonY, data))
+        data = (tryObj('sharesShortPriorMonth', jsonY, data))
+        data = (tryObj('heldPercentInsiders', jsonY, data))
+        data = (tryObj('marketCap', jsonY, data))
+        data = (tryObj('beta', jsonY, data))
+        data = (tryObj('priceToSalesTrailing12Months', jsonY, data))
+        data = (tryObj('shortRatio', jsonY, data))
+        data = (tryObj('averageVolume', jsonY, data))
+        data = (tryObj('shortPercentOfFloat', jsonY, data))
+        data = (tryObj('fiftyTwoWeekLow', jsonY, data))
+        data = (tryObj('forwardPE', jsonY, data))
+        data = (tryObj('profitMargins', jsonY, data))
+        data = (tryObj('heldPercentInstitutions', jsonY, data))
+        data = (tryObj('forwardEps', jsonY, data))
+        data = (tryObj('twoHundredDayAverage', jsonY, data))
+        collection.update({"ticker" : company}, {'$push': {'fundamentals': data}})
+        return "fundamentals added to: " +  company +  " for date: " + str(td)
+    if request.method == 'GET':
+        obj = collection.find_one({'ticker' : company})
+        fun = obj['fundamentals']
+        funSize = len(obj['fundamentals']) - 1
+        return fun[funSize]
 
-# def for trying to add object in Fundamentals, as some don't exist in other tickers
+# def for trying to add object in fundamentals, as some don't exist in other tickers
 def tryObj(name , jsonY, data):
     try:
         data.update({name : jsonY[name]})
@@ -124,21 +147,24 @@ def tryObj(name , jsonY, data):
     except:
         return data
 
-def getOne(ticker, ):
-    startdate = datetime(2020,4,4)
-    enddate = datetime(2020,4,5)
-    obj = collection.find_one({"ticker": "test5"})
-    for i in obj['testt']:
+def getOne(ticker, date):
+    date2 = date - timedelta(hours=24)
+    startdate = datetime.strptime(date,'%Y-%m-%d')
+    enddate = datetime.strptime(date2 ,'%Y-%m-%d')
+    obj = collection.find_one({"ticker": ticker})
+    for i in obj['historical']:
         if i['date'] > startdate and i['date'] < enddate:
             return i
 
-def getlist(ticker, ): # DAY TO today
-    startdate = datetime(2020,4,4)
-    enddate = datetime(2020,4,5)
-    obj = collection.find_one({"ticker": "test5"})
-    for i in obj['testt']:
+def getlist(ticker, days): # Make sure is days
+    enddate = datetime.now()
+    startdate = enddate - timedelta(hours=24*days)
+    obj = collection.find_one({"ticker": ticker})
+    hist = []
+    for i in obj['historical']:
         if i['date'] > startdate and i['date'] < enddate:
-            return i
+            hist.append(i)
+    return hist
 
 def addhist2year(company):
   comp = yf.Ticker(company)
@@ -173,6 +199,8 @@ def insert_document():
 @app.route('/<string:company>/intraday', methods=['GET'])
 def get_intraday(company):
 
+    print("getting called")
+
 
     key = 'CYNCL6X4FUN4SE0K'
 
@@ -188,7 +216,7 @@ def get_intraday(company):
 
     # Convert string dates to datetime format and append to list
     for key, value in intraday_data.items():
-        convert_daytime = datetime.datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
+        convert_daytime = datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
         days_list.append(convert_daytime.day)
 
 
@@ -197,7 +225,7 @@ def get_intraday(company):
 
     # Add filtered data to new dictionary
     for key, value in intraday_data.items():
-        convert_daytime = datetime.datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
+        convert_daytime = datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
         day = convert_daytime.day
 
         if day == latest_day:
@@ -225,21 +253,21 @@ def get_documents():
 def get_tweepy(ticker):
   api = TwitterClient()
 
-  # calling function to get tweets 
-  tweets = api.get_tweets(query = ticker, count = 500) 
+  # calling function to get tweets
+  tweets = api.get_tweets(query = ticker, count = 500)
 
   # store in mongodb
   for tweet in tweets:
     # might need to write condition to make sure tweets with same unique ID aren't duplicated
 
     # get date from iso datetime string
-    tweet_date = datetime.datetime.strptime(tweet['date'], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
+    tweet_date = datetime.strptime(tweet['date'], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
 
     #check if there is already a date object for tweet_date
     tweet_array = collection.find_one({"ticker" : ticker })["tweets"]
     tweet_date_exists = any(x for x in tweet_array if x["date"] == tweet_date)
 
-    # if date object doesn't exist yet, add it 
+    # if date object doesn't exist yet, add it
     if not tweet_date_exists:
         collection.update({"ticker" : ticker}, {'$push': {'tweets': {'date':tweet_date, 'day_sentiment': 0, 'tweets':[]}}})
 
@@ -290,4 +318,3 @@ if os.getenv('environment') == 'dev':
     app.run(host='0.0.0.0')
 elif __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
-
