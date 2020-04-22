@@ -8,13 +8,13 @@
 <div class="info"><h4 class="Headquarters"> Headquarters </h4><div class="space"></div>
 <div class="result"> {{metadata.city}}, {{metadata.state}} </div></div>
 <div class="info"><h4 class="Market"> Market Cap</h4><div class="space"></div>
-<div class="result"> {{fundamentals ? fundamentals.marketCap.fmt : ''}} </div></div>
+<div class="result"> {{fundamentals.marketCap.fmt}} </div></div>
 <div class="info"><h4 class="Average"> Average Volume </h4><div class="space"></div>
-<div class="result"> {{fundamentals ? fundamentals.averageVolume.fmt : ''}} </div></div>
+<div class="result"> {{fundamentals.averageVolume.fmt}} </div></div>
 <div class="info"><h4 class="52WeekHigh "> 52 Week High </h4><div class="space"></div>
-<div class="result"> {{fundamentals ? fundamentals.fiftyTwoWeekHigh.fmt : ''}} </div></div>
+<div class="result"> {{fundamentals.fiftyTwoWeekHigh.fmt}} </div></div>
 <div class="info"><h4 class="52WeekLow"> 52 Week Low </h4><div class="space"></div>
-<div class="result"> {{fundamentals ? fundamentals.fiftyTwoWeekLow.fmt : ''}} </div></div>
+<div class="result"> {{fundamentals.fiftyTwoWeekLow.fmt}} </div></div>
 
 </div>
 </template>
@@ -37,12 +37,17 @@ export default {
   data(){
     return {
       metadata: {
-        shortName : '',
-        logo_url : '',
-        website : ''
+        longBusinessSummary : '',
+        fullTimeEmployees : '',
+        city : '',
+        state: '',
+        
       },
       fundamentals : {
-
+        marketCap: {fmt: ''},
+        averageVolume: {fmt: ''},
+        fiftyTwoWeekLow: {fmt: ''},
+        fiftyTwoWeekHigh: {fmt: ''}
       }
     }
   },
