@@ -6,15 +6,21 @@ from tensorflow.keras.optimizers import Adam
 
 def build_model(T, D):	
 	i = Input(shape=(T, D))
+<<<<<<< HEAD
 	x = LSTM(50)(i)
 <<<<<<< HEAD
 =======
 	x = LSTM(50)(x)
 	x = LSTM(25)(x)
 >>>>>>> 044d9f51a6268fd5ae0448ba04f61c7c8b3c79d2
+=======
+	x = LSTM(60, return_sequences=True)(i)
+	x = LSTM(30, return_sequences=True)(x)
+	x = LSTM(15)(x)
+>>>>>>> ec1f921d7719bbfdd816dfb3c91c1ac57973159c
 	x = Dense(1, activation='sigmoid')(x)
 	model = Model(i, x)
-	model.compile(loss='binary_crossentropy', optimizer=Adam(lr=.001), metrics=['accuracy'])
+	model.compile(loss='mean_squared_error', optimizer=Adam(lr=.001), metrics=['accuracy'])
 
 	return model
 

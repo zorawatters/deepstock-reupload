@@ -28,6 +28,8 @@ var store = new Vuex.Store({
     companies: ['AMD', 'AAPL', 'TSLA', 'SPLK'],	
     ticker: "AMD",
   	stockData: {},
+    batchTweets: [],
+    daySentiment: {},
   },
   getters:{
     getTicker: state => {
@@ -42,6 +44,12 @@ var store = new Vuex.Store({
     },
     getStockData: (state) => {
     	return company => state.stockData[company]
+    },
+    getTweetStreamData: (state) => {
+    	return state.batchTweets
+    },
+    getSentimentData: (state) => {
+    	return company => state.daySentiment[company]
     },
     getPrediction: (state, getters) => {
       var p = (getters.getStockData(getters.getTicker)['prediction'])
