@@ -1,43 +1,53 @@
 <template>
   <div :class = "custom">
     <h3 class="card-header">About </h3>
-    <b-row>
-      <div class = "col-12 text-left list-group list-group-horizontal">
-        <b-row class="">
-        <dl class="col-6 pt-4">
+    <b-row class="">
+      <div class = " list-group list-group-horizontal">
+        <dl class="col-4 pt-4">
           <ul>
-            <li class="list-group-item"><span class="text-left "><b>Employees</b> <span style="color:#42b983" class=""> {{metadata.fullTimeEmployees }} </span></span></li>
+            <li class="list-group-item"><span class="text-left "><b>Employees</b> <span class ="text-right" style="color:#42b983"> {{metadata.fullTimeEmployees }} </span></span></li>
             <!-- Use this one ^^-->
-            <!-- <div class="result"> 48016 </div></div> -->
+            <!-- <li class="list-group-item"><span class="text-left "><b>Employees</b> <span style="color:#42b983" class="">  </span></span></li> -->
+            <!-- <div class="result">  </div></div> -->
 
-            <li class="list-group-item"><span class="text-left "><b>Headquarters</b> <span style="color:#42b983" class=""> {{metadata.city}}, {{metadata.state}} </span></span></li>
+            <li class="list-group-item"><span class="text-left "><b>Headquarters</b> <span class ="text-right" style="color:#42b983">{{metadata.city}}, {{metadata.state}}</span></span></li>
             <!-- Use this one ^^-->
+            <!-- <li class="list-group-item"><span class="text-left "><b>Headquarters</b> <span style="color:#42b983" class="">  </span></span></li> -->
             <!-- <div class="result">Palo Alto, CA </div></div> -->
 
+          </ul>
+        </dl>
+        <dl class="col-4 pt-4">
+          <ul>
 
-            <li class="list-group-item"><span class="text-left "><b>Market Cap</b> <span style="color:#42b983" class="">{{fundamentals.marketCap.fmt }}</span></span></li>
+            <li class="list-group-item"><span class="text-left "><b>Market Cap</b> <span class ="text-right" style="color:#42b983">{{fundamentals.marketCap.fmt }}</span></span></li>
+
+            <!-- <li class="list-group-item"><span class="text-left "><b>Market Cap</b> <span style="color:#42b983" class=""></span></span></li> -->
             <!-- Use this one ^^-->
             <!-- <div class="result"> 126.62B </div></div> -->
-          </ul>
-          </dl>
-          <dl class="col-6 pt-4">
-            <ul>
-            <li class="list-group-item"><span class="text-left "><b>Average Volume</b> <span style="color:#42b983" class=""> {{fundamentals.averageVolume.fmt }}</span></span></li>
+
+            <li class="list-group-item"><span class="text-left "><b>Average Volume</b> <span class ="text-right" style="color:#42b983"> {{fundamentals.averageVolume.fmt }}</span></span></li>
+            <!-- <li class="list-group-item"><span class="text-left "><b>Average Volume</b> <span style="color:#42b983" class=""> </span></span></li> -->
             <!-- Use this one ^^-->
             <!-- <div class="result"> 20.72M </div></div> -->
 
-            <li class="list-group-item"><span class="text-left "><b>52 Week High</b> <span style="color:#42b983" class="">{{fundamentals.fiftyTwoWeekHigh.fmt }}</span></span></li>
-
-          <!-- Use this one ^^-->
-          <!-- <div class="result"> 968.99 </div></div> -->
-
-          <li class="list-group-item"><span class="text-left "><b>52 Week Low</b> <span style="color:#42b983" class="">{{fundamentals.fiftyTwoWeekLow.fmt }}</span></span></li>
-
-          <!-- Use this one ^^-->
-          <!-- <div class="result"> 176.99 </div></div> -->
-        </ul>
+          </ul>
         </dl>
-      </b-row>
+        <dl class="col-4 pt-4">
+          <ul>
+
+            <li class="list-group-item"><span class="text-left "><b>52 Week High</b> <span style="color:#42b983" class="">{{fundamentals.fiftyTwoWeekHigh.fmt }}</span></span></li>
+            <!-- <li class="list-group-item"><span class="text-left "><b>52 Week High</b> <span style="color:#42b983" class=""></span></span></li> -->
+            <!-- Use this one ^^-->
+            <!-- <div class="result"> 968.99 </div></div> -->
+
+            <li class="list-group-item"><span class="text-left "><b>52 Week Low</b> <span style="color:#42b983" class="">{{fundamentals.fiftyTwoWeekLow.fmt }}</span></span></li>
+            <!-- <li class="list-group-item"><span class="text-left "><b>52 Week Low</b> <span style="color:#42b983" class=""></span></span></li> -->
+            <!-- Use this one ^^-->
+            <!-- <div class="result"> 176.99 </div></div> -->
+          </ul>
+        </dl>
+
       </div>
     </b-row>
     <b-row>
