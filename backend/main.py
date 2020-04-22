@@ -6,7 +6,6 @@ from flask_pymongo import pymongo
 from pymongo import MongoClient
 import yfinance as yf
 from datetime import tzinfo, timedelta, datetime
-from alpha_vantage.timeseries import TimeSeries
 import json
 from bson import json_util
 import tweepy
@@ -260,47 +259,47 @@ def get_documents():
 
 @app.route('/tweepy/<string:ticker>', methods=['GET'])
 def get_tweepy(ticker):
-  api = TwitterClient()
+    api = TwitterClient()
 
-  # calling function to get tweets
-  tweets = api.get_tweets(query = ticker, count = 500)
+    # calling function to get tweets
+    tweets = api.get_tweets(query = ticker, count = 500)
 
-  # store in mongodb
-  for tweet in tweets:
-    # might need to write condition to make sure tweets with same unique ID aren't duplicated
+    # store in mongodb
+    for tweet in tweets:
+        # might need to write condition to make sure tweets with same unique ID aren't duplicated
 
-    # get date from iso datetime string
-    tweet_date = datetime.strptime(tweet['date'], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
+        # get date from iso datetime string
+        tweet_date = datetime.strptime(tweet['date'], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
 
-    #check if there is already a date object for tweet_date
-    tweet_array = collection.find_one({"ticker" : ticker })["tweets"]
-    tweet_date_exists = any(x for x in tweet_array if x["date"] == tweet_date)
+        #check if there is already a date object for tweet_date
+        tweet_array = collection.find_one({"ticker" : ticker })["tweets"]
+        tweet_date_exists = any(x for x in tweet_array if x["date"] == tweet_date)
 
-    # if date object doesn't exist yet, add it
-    if not tweet_date_exists:
-        collection.update({"ticker" : ticker}, {'$push': {'tweets': {'date':tweet_date, 'day_sentiment': 0, 'tweets':[]}}})
+        # if date object doesn't exist yet, add it
+        if not tweet_date_exists:
+            collection.update({"ticker" : ticker}, {'$push': {'tweets': {'date':tweet_date, 'day_sentiment': 0, 'tweets':[]}}})
 
-    # add tweet to tweets array
-    collection.update({"ticker" : ticker, "tweets.date": tweet_date}, {'$push': {'tweets.$.tweets': tweet}} )
+        # add tweet to tweets array
+        collection.update({"ticker" : ticker, "tweets.date": tweet_date}, {'$push': {'tweets.$.tweets': tweet}} )
 
-    # recalculate day sentiment avg for each tweet added
-    day_object = next((x for x in tweet_array if x["date"] == tweet_date), None)
+        # recalculate day sentiment avg for each tweet added
+        day_object = next((x for x in tweet_array if x["date"] == tweet_date), None)
 
-    if day_object is None:
-        avg_day_sentiment = 0
-        updated_avg_day_sentiment = tweet["scaled_sentiment"]
-    else:
-        avg_day_sentiment = day_object["day_sentiment"]
-        updated_avg_day_sentiment = ((avg_day_sentiment * len(day_object["tweets"])) + tweet["scaled_sentiment"])/(len(day_object["tweets"]) + 1)
+        if day_object is None:
+            avg_day_sentiment = 0
+            updated_avg_day_sentiment = tweet["scaled_sentiment"]
+        else:
+            avg_day_sentiment = day_object["day_sentiment"]
+            updated_avg_day_sentiment = ((avg_day_sentiment * len(day_object["tweets"])) + tweet["scaled_sentiment"])/(len(day_object["tweets"]) + 1)
 
 
-    # calculate new average
-    print(updated_avg_day_sentiment)
+        # calculate new average
+        print(updated_avg_day_sentiment)
 
-    # update daily sentiment
-    collection.update({"ticker" : ticker, "tweets.date": tweet_date}, {'$set': {'tweets.$.day_sentiment': updated_avg_day_sentiment}} )
+        # update daily sentiment
+        collection.update({"ticker" : ticker, "tweets.date": tweet_date}, {'$set': {'tweets.$.day_sentiment': updated_avg_day_sentiment}} )
 
-  return json.dumps(tweets, 200)
+    return json.dumps(tweets, 200)
 
 # this deletes all tweets in database for a specified company
 @app.route('/cleartweets/<string:ticker>', methods=['GET'])
