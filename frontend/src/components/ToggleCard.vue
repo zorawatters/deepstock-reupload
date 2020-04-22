@@ -67,6 +67,7 @@ export default {
     }
   },
   async mounted(){
+    console.log(this.$backendUrl)
     this.metadata = (await this.$http(this.$backendUrl + '/'+ this.ticker +'/metadata')).data
   },
   computed: {

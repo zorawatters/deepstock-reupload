@@ -42,7 +42,7 @@ export default {
       this.dataStore.dispose()
       this.dataStore = new FusionCharts.DataStore()
       return ({
-        chart: {},
+        chart: {theme: "candy"},
         navigator: {
           enabled: 0
         },

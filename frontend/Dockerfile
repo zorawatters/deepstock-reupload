@@ -1,5 +1,5 @@
 FROM node:current
-RUN npm install -g http-server
+RUN npm install -qg http-server
 WORKDIR /deep-stock-frontend
 COPY package*.json ./
 RUN npm install

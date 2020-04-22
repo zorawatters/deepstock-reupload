@@ -14,7 +14,7 @@ script:
 
 before_deploy:
   - if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl -s https://sdk.cloud.google.com | bash; fi
-
+  - cp deep-stock-268818-fce7b0e95509.json backend/
 deploy:
   - provider: script
     script: ls && chmod +x deploy-prod.sh &&  bash deploy-prod.sh

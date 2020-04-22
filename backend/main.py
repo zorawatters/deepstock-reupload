@@ -9,11 +9,12 @@ from datetime import tzinfo, timedelta, datetime
 import json
 from bson import json_util
 import tweepy
-import producer
 from tweepy.parsers import JSONParser
 from tweepy.streaming import StreamListener
 from twitter import TwitterClient
 from flask_jsonpify import jsonpify
+
+#from twitter import TwitterClient
 from google.oauth2 import service_account
 from googleapiclient import discovery
 import pandas as pd
@@ -258,6 +259,7 @@ def get_documents():
 
     return json.dumps(response)
 
+"""
 @app.route('/tweepy/<string:ticker>', methods=['GET'])
 def get_tweepy(ticker):
     api = TwitterClient()
@@ -269,14 +271,12 @@ def get_tweepy(ticker):
     for tweet in tweets:
         # might need to write condition to make sure tweets with same unique ID aren't duplicated
 
-<<<<<<< HEAD
+
     # get date from iso datetime string
     print(tweet['date'])
     tweet_date = datetime.strptime(tweet['date'], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
-=======
         # get date from iso datetime string
         tweet_date = datetime.strptime(tweet['date'], "%Y-%m-%dT%H:%M:%S").strftime("%Y-%m-%d")
->>>>>>> ec1f921d7719bbfdd816dfb3c91c1ac57973159c
 
         #check if there is already a date object for tweet_date
         tweet_array = collection.find_one({"ticker" : ticker })["tweets"]
@@ -307,7 +307,7 @@ def get_tweepy(ticker):
         collection.update({"ticker" : ticker, "tweets.date": tweet_date}, {'$set': {'tweets.$.day_sentiment': updated_avg_day_sentiment}} )
 
     return json.dumps(tweets, 200)
-
+"""
 # this deletes all tweets in database for a specified company
 @app.route('/cleartweets/<string:ticker>', methods=['GET'])
 def clear_tweets(ticker):
@@ -315,7 +315,7 @@ def clear_tweets(ticker):
 
     return "cleared tweets for " + ticker
     
-    
+"""   
 @app.route('/tweepy_kafka', methods=['GET'])
 def get_tweepsy():
   ticker = 'TSLA'
@@ -357,7 +357,7 @@ def get_tweepsy():
     print({"ticker" : ticker, "tweets.date": tweet_date}, {'$set': {'tweets.$.day_sentiment': updated_avg_day_sentiment}} )
 
   return json.dumps(tweets, 200)
-
+"""
 # get last 7 days sentiment 
 @app.route('/<string:company>/recentdays', methods=['GET'])
 def get_recent_sentiment(company):
@@ -420,7 +420,7 @@ def make_pred(company):
     instances = ({'input_1':X[0].tolist()})
 
     credentials = service_account.Credentials.from_service_account_file(
-        filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
+        filename=os.getenv('GOOGLE_APPLICATION_CREDENTIALS'),
         scopes=['https://www.googleapis.com/auth/cloud-platform']
     )
     

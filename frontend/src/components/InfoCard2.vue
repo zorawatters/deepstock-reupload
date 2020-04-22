@@ -16,6 +16,7 @@
       <div style="border-color:#42b983; border-style: solid; height:100px; width:100px;" class="rounded-circle center"></div>
       <!-- <img class="card-img-bottom" :src="image" :alt="name" style="width:100%"> -->
   </div>
+  </div>
 </template>
 <script>
 

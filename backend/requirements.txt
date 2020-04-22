@@ -21,25 +21,17 @@ httplib2==0.17.2
 idna==2.9
 itsdangerous==1.1.0
 Jinja2==2.11.1
-<<<<<<< HEAD
-kafka-python==2.0.1
-=======
 joblib==0.14.1
->>>>>>> ec1f921d7719bbfdd816dfb3c91c1ac57973159c
 lxml==4.5.0
 MarkupSafe==1.1.1
 mosestokenizer==1.1.0
 multitasking==0.0.9
 nltk==3.4.5
-numpy==1.18.1
+numpy==1.18.3
 oauthlib==3.1.0
-<<<<<<< HEAD
-pandas==0.25.3
-PySocks==1.7.1
-=======
->>>>>>> 044d9f51a6268fd5ae0448ba04f61c7c8b3c79d2
 openfile==0.0.7
 pandas==0.25.3
+pkg-resources==0.0.0
 protobuf==3.11.3
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
@@ -54,12 +46,7 @@ rsa==4.0
 scikit-learn==0.22.2.post1
 scipy==1.4.1
 six==1.14.0
-sklearn==0.0
 textblob==0.15.3
-<<<<<<< HEAD
-tweepy==3.8.0
-=======
->>>>>>> 044d9f51a6268fd5ae0448ba04f61c7c8b3c79d2
 toolwrapper==1.0.0
 tweepy==3.8.0
 uctools==1.2.1
