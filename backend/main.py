@@ -176,6 +176,16 @@ def addhist2year(company):
     collection.update({"ticker" : company}, {'$push': {'historical': tmp}})
   return ("added")
 
+def add2months():
+    comp = yf.Ticker(company)
+    hist = comp.history(period="2mo")
+    hist2 = hist.to_dict('index')
+    for i in hist2:
+      tmp = {'date' : i}
+      tmp.update(hist2[i])
+      collection.update({"ticker" : company}, {'$push': {'historical': tmp}})
+    return ("added")
+
 
 '''
   Storing stock data api
