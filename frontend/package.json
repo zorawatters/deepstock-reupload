@@ -16,12 +16,8 @@
     "fusioncharts": "^3.15.1-sr.1",
     "vue": "^2.6.11",
     "vue-fusioncharts": "^3.0.4",
-<<<<<<< HEAD
-    "vue-router": "^3.1.5"
-=======
     "vue-router": "^3.1.5",
     "vuex": "^3.2.0"
->>>>>>> 044d9f51a6268fd5ae0448ba04f61c7c8b3c79d2
   },
   "devDependencies": {
     "@vue/cli-plugin-e2e-cypress": "~4.2.0",

@@ -11,41 +11,6 @@ from tweepy import Stream
 from kafka import SimpleProducer, KafkaClient
 from kafka import KafkaConsumer
 
-#from read-tweets import
-
-
-class TeslaListener(StreamListener):
-    def on_data(self, data):
-        print("sending")
-        producer.send_messages('test2', data.encode('utf-8'))
-        return True
-    def on_error(self, status):
-        print (status)
-
-class AMDListener(StreamListener):
-    def on_data(self, data):
-        producer.send_messages('amd', data.encode('utf-8'))
-        print (data)
-        return True
-    def on_error(self, status):
-        print (status)
-
-class SplunkListener(StreamListener):
-    def on_data(self, data):
-        producer.send_messages('splunk', data.encode('utf-8'))
-        print (data)
-        return True
-    def on_error(self, status):
-        print (status)
-
-class AppleListener(StreamListener):
-    def on_data(self, data):
-        producer.send_messages('apple', data.encode('utf-8'))
-        print (data)
-        return True
-    def on_error(self, status):
-        print (status)
-
 
 class TwitterClient(object): 
     ''' 
@@ -65,13 +30,6 @@ class TwitterClient(object):
         self.auth = tweepy.OAuthHandler(api_key, api_secret_key)
         self.auth.set_access_token(access_token, access_token_secret)
         self.api = tweepy.API(self.auth)
-        
-        producer = SimpleProducer(kafka)
-        
-        self.t = TeslaListener()
-        self.s = SplunkListener()
-        self.a = AMDListener()
-        self.ap = AppleListener()
         
 
         # except:
@@ -116,12 +74,12 @@ class TwitterClient(object):
         #     return 'negative'
         return analysis.sentiment.polarity
         
-    def get_tweetsy(self, query, count):
+    def get_tweetsy(self, ticker, count):
           '''
           Main function to fetch tweets and parse them.
           '''
           # empty list to store parsed tweets
-          consumer = KafkaConsumer('tesla',
+          consumer = KafkaConsumer(ticker,
              bootstrap_servers=['localhost:9092'],
              auto_offset_reset='earliest',
              enable_auto_commit=True,

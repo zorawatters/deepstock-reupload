@@ -9,6 +9,7 @@ from datetime import tzinfo, timedelta, datetime
 from alpha_vantage.timeseries import TimeSeries
 import json
 import tweepy
+import producer
 from tweepy.parsers import JSONParser
 from tweepy.streaming import StreamListener
 from twitter import TwitterClient
@@ -301,9 +302,8 @@ def clear_tweets(ticker):
 def get_tweepsy():
   ticker = 'TSLA'
   api = TwitterClient()
-  print('got') 
   # calling function to get tweets
-  tweets = api.get_tweetsy(query = 'tesla', count = 200)
+  tweets = api.get_tweetsy(ticker = 'TSLA', count = 200)
   for tweet in tweets:
     # might need to write condition to make sure tweets with same unique ID aren't duplicated
 
