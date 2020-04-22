@@ -34,21 +34,20 @@ var store = new Vuex.Store({
       return state.ticker
     },
     getMetadata: state => {
-    	if(!state.stockData[state.ticker]){
-				state.stockData[state.ticker] = {}
-			}
     	return state.stockData[state.ticker]['metadata']
     },
     getChartData: (state, getters) => {
-    	if(!state.stockData[getters.getTicker]){
-				state.stockData[getters.getTicker] = {}
-			}
 			return (getters.getStockData(getters.getTicker)['chartData'])
 			//return (getters.getStockData[getters.getTicker]['chartData'])
     },
     getStockData: (state) => {
     	return company => state.stockData[company]
     },
+    getPrediction: (state, getters) => {
+      var p = (getters.getStockData(getters.getTicker)['prediction'])
+      console.log('got', p)
+      return p
+    }
   },
   mutations:{
     setTicker(state, t) {
@@ -66,6 +65,13 @@ var store = new Vuex.Store({
 				state.stockData[payload.company] = {}
 			}
 			state.stockData[payload.company]['metadata'] = payload.metadata
+    },
+    setPrediction(state, payload){
+      if(!state.stockData[payload.company]){
+        state.stockData[payload.company] = {}
+      }
+      console.log('pred', payload)
+      state.stockData[payload.company]['prediction'] = payload.prediction
     },
     init(state){
     	state.companies.forEach(company => {
@@ -107,19 +113,27 @@ var store = new Vuex.Store({
   	},
   	updateMetadata({commit, state}){
   		state.companies.forEach(company => {
-  			axios.get(backendUrl + '/' + state.ticker + '/metadata').then(response => {
+  			axios.get(backendUrl + '/' + company + '/metadata').then(response => {
   				commit('setMetadata', {company: company, metadata: response.data})
   			})
   		})
   	},
-
+    updatePredictions({commit, state}){
+      state.companies.forEach(company => {
+        console.log('called for', company)
+        axios.get(backendUrl + '/' + company + '/make_prediction').then(response => {
+          commit('setPrediction', {company: company, prediction: response.data[0]['dense']})
+        })
+      })
+    }
 
   }
 });
 
 store.commit('init')
 store.dispatch('updateIntraday')
-//store.dispatch('updateMetadata')
+store.dispatch('updateMetadata')
+store.dispatch('updatePredictions')
 
 new Vue({
   router,
