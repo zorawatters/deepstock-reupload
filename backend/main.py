@@ -9,13 +9,13 @@ import tweepy
 from tweepy.parsers import JSONParser
 from tweepy.streaming import StreamListener
 import json
+import twitter
 from twitter import TwitterClient
 from alpha_vantage.timeseries import TimeSeries
 import json
 from flask_jsonpify import jsonpify
-# from dotenv import Dotenv
-# dotenv = Dotenv('./.env')
-# print(dotenv)
+import datetime
+
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -52,39 +52,40 @@ def get_tweepy():
   # tweetStream = tweepy.Stream(auth = auth, listener = tweetStreamListener)
   # tweetStream.filter(track = ['tesla stocks']) #looking for tweets about tesla
   # return "got it"
-  # creating object of TwitterClient Class 
+  # creating object of TwitterClient Class
   print("b4")
   api = TwitterClient()
-  print("got api")
-  # calling function to get tweets 
-  tweets = api.get_tweets(query = 'Donald Trump', count = 200) 
+  print('got') 
+  # calling function to get tweets
+  tweets = api.get_tweets(query = 'tesla', count = 200)
 
-  # picking positive tweets from tweets 
-  ptweets = [tweet for tweet in tweets if tweet['sentiment'] == 'positive'] 
-  # percentage of positive tweets 
-  print("Positive tweets percentage: {} %".format(100*len(ptweets)/len(tweets))) 
-  # picking negative tweets from tweets 
-  ntweets = [tweet for tweet in tweets if tweet['sentiment'] == 'negative'] 
-  # percentage of negative tweets 
-  print("Negative tweets percentage: {} %".format(100*len(ntweets)/len(tweets))) 
-  # percentage of neutral tweets 
- # print("Neutral tweets percentage: {} %".format(100*len(tweets - ntweets - ptweets)/len(tweets))) 
+  # picking positive tweets from tweets
+  ptweets = [tweet for tweet in tweets if tweet['sentiment'] == 'positive']
+  # percentage of positive tweets
+  print("Positive tweets percentage: {} %".format(100*len(ptweets)/len(tweets)))
+  # picking negative tweets from tweets
+  ntweets = [tweet for tweet in tweets if tweet['sentiment'] == 'negative']
+  # percentage of negative tweets
+  print("Negative tweets percentage: {} %".format(100*len(ntweets)/len(tweets)))
+  # percentage of neutral tweets
+ # print("Neutral tweets percentage: {} %".format(100*len(tweets - ntweets - ptweets)/len(tweets)))
 
-  # printing first 5 positive tweets 
-  print("\n\nPositive tweets:") 
-  for tweet in ptweets[:10]: 
-    print(tweet['text']) 
+  # printing first 5 positive tweets
+  print("\n\nPositive tweets:")
+  for tweet in ptweets[:10]:
+    print(tweet['text'])
 
-  #  printing first 5 negative tweets 
-  print("\n\nNegative tweets:") 
-  for tweet in ntweets[:10]: 
-    print(tweet['text']) 
+  #  printing first 5 negative tweets
+  print("\n\nNegative tweets:")
+  for tweet in ntweets[:10]:
+    print(tweet['text'])
 
   return ntweets[0]
- 
+
 @app.route('/message')
 def get_message():
   return 'Hello Stonks'
+
 
 @app.route('/stock_data')
 def get_stock_data():
@@ -104,7 +105,6 @@ def addTweet(company):
 
 '''
   Storing stock data api
-
   Gets json data from response body and stores it into database
 '''
 
@@ -118,7 +118,6 @@ def insert_document():
 
 '''
   Diplaying stock data api
-
   Gets all the sotored data in the database and retruns a json file
 '''
 
@@ -133,8 +132,32 @@ def get_intraday(company):
 
     intraday_data, data_info = ts.get_intraday(symbol=company, outputsize='compact', interval='5min')
 
-    return json.dumps(intraday_data)
 
+    daily_data = {}
+    days_list = []
+    convert_daytime = 0
+    day = 0
+
+    # Convert string dates to datetime format and append to list
+    for key, value in intraday_data.items():
+        convert_daytime = datetime.datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
+        days_list.append(convert_daytime.day)
+
+
+    # Get latest day
+    latest_day = max(days_list)
+
+    # Add filtered data to new dictionary
+    for key, value in intraday_data.items():
+        convert_daytime = datetime.datetime.strptime(key, "%Y-%m-%d %H:%M:%S")
+        day = convert_daytime.day
+
+        if day == latest_day:
+            if key not in daily_data:
+                daily_data[key] = []
+            daily_data[key].append(value)
+
+    return json.dumps(daily_data)
 
 
 @app.route('/users/display_data')
@@ -155,4 +178,4 @@ def get_documents():
 if os.getenv('environment') == 'dev':
     app.run(host='0.0.0.0')
 elif __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080)

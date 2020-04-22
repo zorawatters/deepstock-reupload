@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import tweepy
 import kafka
 
@@ -7,9 +9,9 @@ from tweepy import Stream
 from kafka import SimpleProducer, KafkaClient
 
 
-class StdOutListener(StreamListener):
+class TweetListener(StreamListener):
     def on_data(self, data):
-        producer.send_messages("test", data.encode('utf-8'))
+        producer.send_messages('test2', data.encode('utf-8'))
         print (data)
         return True
     def on_error(self, status):
@@ -28,7 +30,7 @@ dapi = tweepy.API(auth)
 
 kafka = KafkaClient("localhost:9092")
 producer = SimpleProducer(kafka)
-l = StdOutListener()
+l = TweetListener()
 
 stream = Stream(auth, l)
-stream.filter(track="zoradearr")
+stream.filter(track=["trump"])

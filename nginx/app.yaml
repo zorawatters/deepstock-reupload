@@ -1,3 +1,0 @@
-service: nginx
-runtime: custom
-env: flex

@@ -6,6 +6,9 @@ yarn-debug.log*
 yarn-error.log*
 /test/unit/coverage/
 /test/e2e/reports/
+kafka-stuff/kafka_2.12-2.4.1.tgz
+kafka-stuff/kafka_2.12-2.4.1/NOTICE
+kafka-stuff/kafka_2.12-2.4.1/LICENSE
 selenium-debug.log
 
 # Editor directories and files
@@ -30,4 +33,6 @@ __pycache__
 
 frontend/src/variables.js
 .env
+mlruns/
+mlflow/
 
