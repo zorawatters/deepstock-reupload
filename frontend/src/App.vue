@@ -9,7 +9,7 @@
         </b-col>
         <b-col class="col-3">
           <b-row>
-            <h1 style="display:inline;">DeepBroth</h1>
+            <h1 style="display:inline; color: white;">DeepBroth</h1>
           </b-row>
           <b-row>
             <router-link to="/">Dashboard </router-link>

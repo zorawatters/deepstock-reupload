@@ -2,6 +2,7 @@
 <div :class = "custom">
   <b>Sentiment Analysis:</b>
   <p style="color:red">{{pred}}</p>
+  <p>{{tweet_sent}}</p>
 </div>
 </template>
 <script>
@@ -18,6 +19,9 @@ export default {
     return {
     }
   },
-  computed: mapGetters({pred: 'getPrediction'})
+  computed: mapGetters({
+    pred: 'getPrediction',
+    tweet_sent: 'getTweetSent'
+  })
 }
 </script>
