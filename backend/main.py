@@ -6,18 +6,17 @@ from flask_pymongo import pymongo
 from pymongo import MongoClient
 import yfinance as yf
 from datetime import tzinfo, timedelta, datetime
-# import json
-# from bson import json_util
-# import tweepy
-# from tweepy.parsers import JSONParser
-# from tweepy.streaming import StreamListener
-# from twitter import TwitterClient
-# from flask_jsonpify import jsonpify
-# from google.oauth2 import service_account
-# from googleapiclient import discovery
-# import pandas as pd
-# from sklearn.preprocessing import StandardScaler
-# import numpy as np
+import json
+from bson import json_util
+import tweepy
+
+from twitter import TwitterClient
+from flask_jsonpify import jsonpify
+from google.oauth2 import service_account
+from googleapiclient import discovery
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+import numpy as np
 
 from dotenv import load_dotenv
 load_dotenv()

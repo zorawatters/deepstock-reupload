@@ -1,9 +1,9 @@
-FROM debian:latest
+FROM debian:stable
 
-RUN apt-get -yq update 
-RUN apt-get -yq install build-essential python3-pip rsync
-RUN apt-get -yq install nginx
-RUN apt-get -yq install python3-venv
+RUN apt-get -qq update 
+RUN apt-get -qq install build-essential python3-pip rsync
+RUN apt-get -qq install nginx
+RUN apt-get -qq install python3-venv
 
 WORKDIR /flask-backend
 ADD . /flask-backend
