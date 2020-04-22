@@ -26,7 +26,7 @@ export default {
     return {
       type: "timeseries",
       width: "100%",
-      height: "85%",
+      height: "100%",
       dataFormat: "json",
       dataStore: new FusionCharts.DataStore(),
       schema: [{
@@ -69,7 +69,7 @@ export default {
           }
         ],
         //numbersuffix: "K",
-        theme: "fusion",
+        theme: "candy",
         data: this.dataStore.createDataTable(this.chartData, this.schema)
       })
     },
