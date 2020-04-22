@@ -44,9 +44,30 @@ var store = new Vuex.Store({
     	return company => state.stockData[company]
     },
     getPrediction: (state, getters) => {
-      var p = (getters.getStockData(getters.getTicker)['prediction'])
-      console.log('got', p)
-      return p
+      return (getters.getStockData(getters.getTicker)['prediction'])
+    },
+    getTweets: (state, getters) => {
+      return (getters.getStockData(getters.getTicker)['tweets'])
+    },
+    getTweetText: (state, getters) => {
+      var tweets = getters.getTweets
+      var result = []
+      if(tweets){
+        tweets.forEach(day => {
+          result.push(day.tweets[0].text)
+        })
+      }
+      return result
+    },
+    getTweetSent: (state, getters) => {
+      var tweets = getters.getTweets
+      var result = []
+      if(tweets){
+        tweets.forEach(day => {
+          result.push(day.day_sentiment)
+        })
+      }
+      return result
     }
   },
   mutations:{
@@ -70,14 +91,20 @@ var store = new Vuex.Store({
       if(!state.stockData[payload.company]){
         state.stockData[payload.company] = {}
       }
-      console.log('pred', payload)
       state.stockData[payload.company]['prediction'] = payload.prediction
+    },
+    setTweets(state, payload){
+      if(!state.stockData[payload.company]){
+        state.stockData[payload.company] = {}
+      }
+      state.stockData[payload.company]['tweets'] = payload.tweets
     },
     init(state){
     	state.companies.forEach(company => {
     		state.stockData[company] = {
     			metadata: {},
-    			chartData: []
+    			chartData: [],
+          tweets: []
     		}
     	})
     }
@@ -120,9 +147,16 @@ var store = new Vuex.Store({
   	},
     updatePredictions({commit, state}){
       state.companies.forEach(company => {
-        console.log('called for', company)
         axios.get(backendUrl + '/' + company + '/make_prediction').then(response => {
           commit('setPrediction', {company: company, prediction: response.data[0]['dense']})
+        })
+      })
+    },
+    updateTweets({commit, state}){
+      state.companies.forEach(company => {
+        axios.get(backendUrl + '/' + company + '/recentdays').then(response => {
+          console.log(response)
+          commit('setTweets', {company: company, tweets: response.data})
         })
       })
     }
@@ -134,6 +168,7 @@ store.commit('init')
 store.dispatch('updateIntraday')
 store.dispatch('updateMetadata')
 store.dispatch('updatePredictions')
+store.dispatch('updateTweets')
 
 new Vue({
   router,

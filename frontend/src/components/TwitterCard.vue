@@ -8,12 +8,13 @@
         <a href="#" class="btn btn-info">Link to tweet/bio?</a>
       </div>
       <div class="card-footer text-muted">
-        Display how recent tweet was posted
+        {{ tweets ? tweets[0] : ''}}
       </div>
     </div>
   </div>
 </template>
 <script>
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'twitter-card',
@@ -30,6 +31,7 @@ export default {
   data(){
     return {
     }
-  }
+  },
+  computed: mapGetters({tweets: 'getTweetText'})
 }
 </script>
