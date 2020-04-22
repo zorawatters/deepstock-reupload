@@ -7,6 +7,11 @@ from tensorflow.keras.optimizers import Adam
 def build_model(T, D):	
 	i = Input(shape=(T, D))
 	x = LSTM(50)(i)
+<<<<<<< HEAD
+=======
+	x = LSTM(50)(x)
+	x = LSTM(25)(x)
+>>>>>>> 044d9f51a6268fd5ae0448ba04f61c7c8b3c79d2
 	x = Dense(1, activation='sigmoid')(x)
 	model = Model(i, x)
 	model.compile(loss='binary_crossentropy', optimizer=Adam(lr=.001), metrics=['accuracy'])

@@ -11,8 +11,7 @@ from kafka import KafkaProducer, KafkaClient
 class TeslaListener(StreamListener):
     def on_data(self, data):
         print(data)
-        producer.send('tesla', value_serializer=lambda x: 
-                         dumps(x).encode('utf-8'))
+        producer.send('tesla', data)
         producer.flush()
         return True
     def on_error(self, status):
@@ -20,7 +19,8 @@ class TeslaListener(StreamListener):
         
         
 #kafka = KafkaClient("localhost:9092") 
-producer = KafkaProducer(bootstrap_servers=['localhost:9092'])       
+producer = KafkaProducer(bootstrap_servers=['localhost:9092'], value_serializer=lambda x: 
+                         dumps(x).encode('utf-8'))       
 #producer = SimpleProducer(kafka)
 
 # keys and tokens from the Twitter Dev Console
@@ -37,4 +37,4 @@ api = tweepy.API(auth)
 
 t = TeslaListener()
 tesla_stream = Stream(auth, t)
-tesla_stream.filter(track=["tesla"])
+tesla_stream.filter(track=["tesla"], languages=["en"])

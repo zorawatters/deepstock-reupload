@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // //Loading data
 // import * as d3 from 'd3'
 //
@@ -24,7 +23,6 @@
 //           //  .append("p")
 //            // .text(data[i].Name + ", " + data[i].High)
 //   }
-=======
 //Loading data
 import * as d3 from 'd3'
 /*
@@ -93,7 +91,6 @@ const loadData = d3.json("stockDataExample.json").then(function(data) {
   // "Stock Splits":0
 
 // .then(data => {
->>>>>>> 073ebfce4ba5af9fde00e860d062e6de3d860066
 //   const chartResultsData = data['chart']['result'][0];
 //   const quoteData = chartResultsData['indicators']['quote'][0];
 //   return chartResultsData['timestamp'].map((time, index) => ({

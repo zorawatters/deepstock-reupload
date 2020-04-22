@@ -12,8 +12,9 @@
             <h1 style="display:inline;">DeepBroth</h1>
           </b-row>
           <b-row>
-            <router-link to="/">Dashboard</router-link> |
-            <router-link to="/about">About</router-link>
+            <router-link to="/">Dashboard </router-link>
+            <a style="padding-left:1em "></a>|<a style="padding-right:1em "></a>
+            <router-link to="/about">About </router-link>
           </b-row>
         </b-col>
       </b-row>
@@ -30,17 +31,14 @@
   text-align: center;
   color: #2c3e50;
 }
-
 #nav {
   text-align:left;
   padding: 30px;
 }
-
 #nav a {
   font-weight: bold;
   color: #2c3e50;
 }
-
 #nav a.router-link-exact-active {
   color: #42b983;
 }
