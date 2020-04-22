@@ -6,7 +6,7 @@
 <div class="info"><h4 class="Employees">Employees</h4><div class="space"></div>
 <div class="result"> {{metadata.fullTimeEmployees }} </div></div>
 <div class="info"><h4 class="Headquarters"> Headquarters </h4><div class="space"></div>
-<div class="result"> {{metadata.city}}, {{metadata.state}} </div></div>
+<div class="result"> {{metadata.metadata}}, {{metadata.state}} </div></div>
 <div class="info"><h4 class="Market"> Market Cap</h4><div class="space"></div>
 <div class="result"> {{fundamentals.marketCap.fmt }} </div></div>
 <div class="info"><h4 class="Average"> Average Volume </h4><div class="space"></div>
@@ -19,7 +19,6 @@
 </div>
 </template>
 <script>
-
 export default {
   name: 'company-card',
   props: {
@@ -27,22 +26,24 @@ export default {
       type: String,
       default: ''
     },
-
     ticker: {
       type: String,
       default: ''
     },
-
   },
   data(){
     return {
       metadata: {
-        shortName : '',
-        logo_url : '',
-        website : ''
+        longBusinessSummary : '--',
+        fullTimeEmployees : '--',
+        metadata : '--',
+        state : '--'
       },
       fundamentals : {
-
+        marketCap : {fmt : '--'},
+        averageVolume : {fmt : '--'},
+        fiftyTwoWeekHigh : {fmt : '--'},
+        fiftyTwoWeekLow : {fmt : '--'}
       }
     }
   },
