@@ -1,8 +1,8 @@
 <template>
-  <div :class = "custom" @click="setCompany">
+  <div :class = "custom" @click="setCompany" class="toggle-card">
     <!-- <p>{{ticker}} - {{name}} <t> <a style="color:28a745"> {{high}} </a>|<a style="color:dc3545"> {{low}} </a></p> -->
-    <div class="">
-      <b-row>
+    <div >
+      <b-row >
         <div class="col-8 card shadow opacity:40%">
           <b-row>
             <div class="card-footer ">

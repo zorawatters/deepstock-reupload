@@ -10221,4 +10221,18 @@ a.text-dark:hover, a.text-dark:focus {
     border-color: #dee2e6;
   }
 }
+
+.toggle-card{
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.toggle-card:hover{
+  transform: scale(1.05);
+  transition: 0.25s ease;
+}
+
+.card.shadow.col-lg-7.col-md-6.col-sm-12.col-xs-12.p-1.m-2 {
+    margin-right: 20px !important;
+}
 /*# sourceMappingURL=bootstrap.css.map */
