@@ -11,9 +11,7 @@
   </div>
 </template>
 <script>
-
 import { mapGetters } from 'vuex';
-
 export default {
   name: 'stock-card',
   props: {
@@ -39,13 +37,12 @@ export default {
       }],
     }
   },
-
   computed:{
     dataSource(){
       this.dataStore.dispose()
       this.dataStore = new FusionCharts.DataStore()
       return ({
-        chart: {},
+        chart: {theme: "candy"},
         navigator: {
           enabled: 0
         },
@@ -79,5 +76,4 @@ export default {
     })
   },
 }
-
 </script>

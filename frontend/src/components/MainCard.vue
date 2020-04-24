@@ -1,6 +1,5 @@
 <template>
   <div :class="custom">
-
       <div class="card-body p-1">
       <slot></slot>
     </div>
@@ -28,8 +27,5 @@ export default {
 
 </script>
 <style scoped>
-.card {
-  /* border: 2px dashed black; */
-  width:200px;
-}
+
 </style>

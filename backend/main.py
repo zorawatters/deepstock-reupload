@@ -8,7 +8,6 @@ import yfinance as yf
 from datetime import tzinfo, timedelta, datetime
 import json
 from bson import json_util
-import tweepy
 
 #from twitter import TwitterClient
 from google.oauth2 import service_account

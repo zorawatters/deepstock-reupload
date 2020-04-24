@@ -1,8 +1,8 @@
 <template>
-  <div :class = "custom" @click="setCompany">
+  <div :class = "custom" @click="setCompany" class="toggle-card">
     <!-- <p>{{ticker}} - {{name}} <t> <a style="color:28a745"> {{high}} </a>|<a style="color:dc3545"> {{low}} </a></p> -->
-    <div class="">
-      <b-row>
+    <div >
+      <b-row >
         <div class="col-8 card shadow opacity:40%">
           <b-row>
             <div class="card-footer ">
@@ -30,8 +30,8 @@
 
           </b-row>
         </div>
-        <div class="col-3" style="align-items: center;">
-          <img :src="metadata.logo_url" width = "80" height = "80" class="rounded-circle pt-2 pl-2 shadow">
+        <div class="col-3 pt-2 pl-4" style="align-items: center;">
+          <img :src="metadata.logo_url" width = "80" height = "80" class="rounded-circle shadow">
         </div>
       </b-row>
     </div>
@@ -71,6 +71,7 @@ export default {
     }
   },
   async mounted(){
+    console.log(this.$backendUrl)
     this.metadata = (await this.$http(this.$backendUrl + '/'+ this.ticker +'/metadata')).data
   },
   computed: {
